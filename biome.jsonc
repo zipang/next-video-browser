@@ -7,8 +7,8 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["src/routeTree.gen.ts", ".next/*"],
-		"include": ["src/*", ".vscode/*", "index.html", "*.config.ts"]
+		"ignore": [".next/*"],
+		"include": ["app/*", ".vscode/*", "index.html", "*.config.ts"]
 	},
 	"formatter": {
 		"enabled": true,

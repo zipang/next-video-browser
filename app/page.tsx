@@ -12,7 +12,7 @@ import {
 	VStack,
 	HStack,
 	Grid,
-	GridItem,
+	GridItem
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { clsx } from "clsx";
@@ -98,16 +98,16 @@ export default function VideoGallery() {
 					overflowY="scroll"
 					css={{
 						"&::-webkit-scrollbar": {
-							width: "6px",
+							width: "6px"
 						},
 						"&::-webkit-scrollbar-track": {
-							background: "#1A1A1A",
+							background: "#1A1A1A"
 						},
 						"&::-webkit-scrollbar-thumb": {
-							background: "#333333",
+							background: "#333333"
 						},
 						scrollbarWidth: "thin",
-						scrollbarColor: "#333333 #1A1A1A",
+						scrollbarColor: "#333333 #1A1A1A"
 					}}
 					paddingY="2"
 				>
@@ -126,7 +126,7 @@ export default function VideoGallery() {
 							<Image
 								className={clsx(
 									"video-thumbnail",
-									selectedVideo.id === video.id && "active",
+									selectedVideo.id === video.id && "active"
 								)}
 								alt={video.title}
 								src={video.thumbnail}
@@ -216,12 +216,7 @@ export default function VideoGallery() {
 				</Box>
 
 				{/* Video Information Section */}
-				<Grid
-					templateColumns="repeat(2, 1fr)"
-					gap={8}
-					padding="8"
-					bg="brand.900"
-				>
+				<Grid templateColumns="repeat(2, 1fr)" gap={8} padding="8" bg="brand.900">
 					{/* Left Column - Title and Description */}
 					<GridItem>
 						<VStack align="flex-start" spacing={4}>
@@ -239,27 +234,30 @@ export default function VideoGallery() {
 
 					{/* Right Column - Additional Resources */}
 					<GridItem>
-						<VStack align="flex-start" spacing={6}>
+						<VStack align="flex-start">
 							<Heading size="xl">Resources</Heading>
-							{selectedVideo.resources.length > 0 ? (
-								selectedVideo.resources.map((resource, index) => (
-									<HStack key={index} spacing={3}>
-										<DownloadIcon />
-										<Link
-											href={resource.url}
-											fontSize="xl"
-											fontWeight="600"
-											_hover={{ textDecoration: "underline" }}
-										>
-											{resource.name} (PDF)
-										</Link>
-									</HStack>
-								))
-							) : (
-								<Text fontSize="xl" color="gray.500">
-									No resources available
-								</Text>
-							)}
+
+							<ul className="ressources">
+								{selectedVideo.resources.length > 0 ? (
+									selectedVideo.resources.map((resource, index) => (
+										<HStack as="li" key={`ressource-${index}`}>
+											<DownloadIcon />
+											<Link
+												href={resource.url}
+												fontSize="xl"
+												fontWeight="400"
+												_hover={{ textDecoration: "underline" }}
+											>
+												{resource.name} (PDF)
+											</Link>
+										</HStack>
+									))
+								) : (
+									<Text fontSize="xl" color="gray.500">
+										No resources available
+									</Text>
+								)}
+							</ul>
 						</VStack>
 					</GridItem>
 				</Grid>

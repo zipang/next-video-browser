@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type eventHandler = (() => void) | undefined;
 
 export const useDisclosure = (
 	initialState = false,
-	onOpen: eventHandler,
-	onClose: eventHandler,
+	onOpen?: eventHandler,
+	onClose?: eventHandler
 ) => {
 	const [isOpen, setIsOpen] = useState(initialState);
 

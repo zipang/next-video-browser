@@ -2,7 +2,7 @@ import type React from "react";
 import type { FC } from "react";
 import type { IconProps } from ".";
 
-export const DownloadIcon: FC<IconProps> = ({ size="1em", color }) => (
+export const DownloadIcon: FC<IconProps> = ({ size = "1em", color }) => (
 	<svg
 		width={size}
 		height={size}
