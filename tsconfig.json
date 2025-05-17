@@ -1,23 +1,27 @@
 {
 	"compilerOptions": {
-		"target": "ES2017",
-		"lib": ["dom", "dom.iterable", "esnext"],
+		// Environment setup & latest features
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleDetection": "force",
+		"jsx": "preserve",
 		"allowJs": true,
+		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"noEmit": true,
-		"esModuleInterop": true,
-		"module": "esnext",
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"jsx": "preserve",
 		"incremental": true,
 		"plugins": [
 			{
 				"name": "next"
 			}
 		],
+		// Path aliases
+		"baseUrl": ".",
 		"paths": {
 			"@hooks/*": ["./src/app/hooks/*"],
 			"@icons/*": ["./src/app/components/icons/*"]
