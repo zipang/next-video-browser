@@ -29,7 +29,7 @@ export default function VideoGallery() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const launcherRef = useRef<HTMLDivElement>(null);
-	const { isOpen, toggle } = useDisclosure(true);
+	const [isPanelOpen, togglePanel] = useDisclosure({ initialState: true });
 
 	// Handle video selection
 	const handleSelectVideo = (video: (typeof videos)[0]) => {
@@ -77,10 +77,11 @@ export default function VideoGallery() {
 	}, []);
 
 	return (
-		<Flex height="100vh" overflow="hidden" position="relative">
+		<Flex as="aside" height="100vh" overflow="hidden" position="relative">
 			{/* Video Launcher - Left Side */}
 			<Box
-				width={isOpen ? "240px" : "0"}
+				as="nav"
+				width={isPanelOpen ? "240px" : "0"}
 				height="100vh"
 				bg="brand.800"
 				transition="width 0.3s ease"
@@ -140,10 +141,10 @@ export default function VideoGallery() {
 				</Box>
 			</Box>
 
-			{/* Toggle Button for Launcher */}
+			{/* Button to deploy the panel */}
 			<Button
 				position="absolute"
-				left={isOpen ? "240px" : "0"}
+				left={isPanelOpen ? "240px" : "0"}
 				top="50%"
 				transform="translateY(-50%)"
 				zIndex="20"
@@ -152,14 +153,14 @@ export default function VideoGallery() {
 				borderRadius="0 4px 4px 0"
 				bg="brand.700"
 				_hover={{ bg: "brand.800" }}
-				onClick={toggle}
+				onClick={togglePanel}
 				padding="0"
 				transition="left 0.3s ease"
 			>
 				<Box
 					as="span"
 					display="inline-block"
-					transform={isOpen ? "rotate(180deg)" : "rotate(0deg)"}
+					transform={isPanelOpen ? "rotate(180deg)" : "rotate(0deg)"}
 					transition="transform 0.3s ease"
 				>
 					&#10095;
@@ -180,6 +181,7 @@ export default function VideoGallery() {
 					<Box
 						as="video"
 						ref={videoRef}
+						// @ts-ignore: Box as video is not anticipated by Chakra
 						src={selectedVideo.videoSrc}
 						width="100%"
 						height="100%"

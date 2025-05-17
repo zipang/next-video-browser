@@ -19,8 +19,8 @@
 			}
 		],
 		"paths": {
-			"@hooks/*": ["./app/hooks/*"],
-			"@icons/*": ["./app/components/icons/*"]
+			"@hooks/*": ["./src/app/hooks/*"],
+			"@icons/*": ["./src/app/components/icons/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
