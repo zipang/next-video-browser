@@ -8,7 +8,7 @@
 	"files": {
 		"ignoreUnknown": false,
 		"ignore": [".next/*"],
-		"include": ["app/*", ".vscode/*", "index.html", "*.config.ts"]
+		"include": ["src/*", "*.json", "*.config.ts"]
 	},
 	"formatter": {
 		"enabled": true,
