@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "bun --bun next dev --turbopack",
-		"build": "bun --bun next build",
+		"build": "next build",
 		"start": "bun --bun next start",
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
