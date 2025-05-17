@@ -1,10 +1,16 @@
-img.video-thumbnail {
-	transition: all 0.3s ease-in-out;
-	filter: grayscale(100%);
-	opacity: 0.7;
-}
-img.video-thumbnail.active,
-img.video-thumbnail:hover {
-	filter: grayscale(0%);
-	opacity: 0.9;
+.vignette {
+	&.active {
+		background-color: white;
+	}
+
+	> img {
+		transition: all 0.3s ease-in-out;
+		filter: grayscale(100%);
+		opacity: 0.7;
+	}
+	
+	&:hover > img, &.active > img {
+		filter: grayscale(0%);
+		opacity: 0.9;		
+	}
 }

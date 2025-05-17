@@ -115,26 +115,25 @@ export default function VideoGallery() {
 					{[...videos, ...videos, ...videos].map((video, index) => (
 						<Center
 							key={`${video.id}-${index}`}
-							padding="2"
+							className={clsx(
+								"vignette",
+								selectedVideo.id === video.id && "active"
+							)}
 							cursor="pointer"
-							backgroundColor={
-								selectedVideo.id === video.id ? "white" : "transparent"
-							}
 							onClick={() => handleSelectVideo(video)}
+							padding="2"
 							position="relative"
 						>
 							<Image
-								className={clsx(
-									"video-thumbnail",
-									selectedVideo.id === video.id && "active"
-								)}
 								alt={video.title}
 								src={video.thumbnail}
 								width="240"
 								height="180"
 							/>
-							<Text position="absolute" color="white">
+							<Text position="absolute" color="white" textAlign="center">
 								Ep#{video.id}
+								<br />
+								{video.title}
 							</Text>
 						</Center>
 					))}
