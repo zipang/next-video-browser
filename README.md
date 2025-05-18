@@ -1,31 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with v0.
+This is a [Next.js](https://nextjs.org) project bootstrapped with Vercel [v0](https://v0.dev).
 
 The purpose of this SPA is to showcase a quick way to share a collection of videos with additional linked ressources like : text, documents.
+You could use this starter to sell a course with educationnal content..
 
 ## Getting Started
 
-First, run the development server:
+First, install the deps and launch the development server:
 
 ```bash
-npm run dev
+npm install && npm run dev
 # or
-yarn dev
+yarn install && yarn dev
 # or
-pnpm dev
-# or
-bun dev
+bun i && bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) inside your browser to see the result.
 
 ## Technical Stack
 
-* Next.js
-* Styling with Chakra UI
-* Lint with Biome
-* Run and build with bun
+* [Next.js](https://nextjs.org) (does a great job with its automatic optimization and resizing of images)
+* Styling with [Chakra UI](https://chakra-ui.com)
+* Format and lint with [Biome](https://biomejs.dev) which is aroud 400% times faster than eslint and prettier
+* Install packages and run with [bun](https://bun.sh)
 
 To learn more about Next.js, take a look at the following resources:
 
