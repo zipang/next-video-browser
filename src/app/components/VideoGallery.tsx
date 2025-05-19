@@ -146,7 +146,7 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 				onClose={closePanel}
 				onOpen={openPanel}
 				onToggle={togglePanel}
-				showOverlay={false}
+				showOverlay={true}
 				showHandler={true}
 			>
 				<VideoSlider
