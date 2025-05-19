@@ -11,7 +11,6 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-recycled-list": "^1.0.7",
-        "react-swipeable": "^7.0.2",
       },
       "devDependencies": {
         "@biomejs/biome": "1.9.4",
@@ -416,8 +415,6 @@
     "react-recycled-list": ["react-recycled-list@1.0.7", "", { "dependencies": { "react-resize-detector": "^6.7.0" }, "peerDependencies": { "react": ">=16", "react-dom": ">=16" } }, "sha512-Ce+DNS31Uf7BJ6rZyLIujQrIKeYXAT44Oax7zAcy8bRP+zuCN+CTezvyJn9jpD9fHxqLZb6raQJMIAlm0iWmjQ=="],
 
     "react-resize-detector": ["react-resize-detector@6.7.8", "", { "dependencies": { "@types/resize-observer-browser": "^0.1.6", "lodash": "^4.17.21", "resize-observer-polyfill": "^1.5.1" }, "peerDependencies": { "react": "^16.0.0 || ^17.0.0", "react-dom": "^16.0.0 || ^17.0.0" } }, "sha512-0FaEcUBAbn+pq3PT5a9hHRebUfuS1SRLGLpIw8LydU7zX429I6XJgKerKAMPsJH0qWAl6o5bVKNqFJqr6tGPYw=="],
-
-    "react-swipeable": ["react-swipeable@7.0.2", "", { "peerDependencies": { "react": "^16.8.3 || ^17 || ^18 || ^19.0.0 || ^19.0.0-rc" } }, "sha512-v1Qx1l+aC2fdxKa9aKJiaU/ZxmJ5o98RMoFwUqAAzVWUcxgfHFXDDruCKXhw6zIYXm6V64JiHgP9f6mlME5l8w=="],
 
     "resize-observer-polyfill": ["resize-observer-polyfill@1.5.1", "", {}, "sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg=="],
 

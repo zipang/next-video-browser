@@ -17,8 +17,7 @@
 		"next": "15.2.4",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-recycled-list": "^1.0.7",
-		"react-swipeable": "^7.0.2"
+		"react-recycled-list": "^1.0.7"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
