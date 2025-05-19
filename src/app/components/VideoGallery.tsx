@@ -18,11 +18,11 @@ import Image from "next/image";
 import { clsx } from "clsx";
 import { useDisclosure } from "@hooks/use-disclosure";
 import { DownloadIcon } from "@icons/download-icon";
+import { Drawer } from "./base/Drawer";
 import { VideoPlayer } from "./VideoPlayer";
 import type { Video } from "./PlayerStateProvider";
 
 import "./video-gallery-styles.css";
-import { Drawer } from "./base/Drawer";
 
 export interface VideoGalleryProps {
 	videos: Video[];
@@ -42,6 +42,7 @@ const Vignette: FC<VignetteProps> = ({ video, active, onSelection }) => (
 		onClick={() => onSelection(video)}
 		padding="2"
 		position="relative"
+		tabIndex={0}
 	>
 		<Image alt={video.title} src={video.thumbnail} width="240" height="180" />
 		<Text position="absolute" color="white" textAlign="center">
@@ -133,7 +134,7 @@ const VideoSlider: FC<VideoSliderProps> = ({
 
 export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 	const [selectedVideo, setSelectedVideo] = useState(videos[0]);
-	const [isPanelOpen, togglePanel, closePanel, openPanel] = useDisclosure({
+	const [isPanelOpen, toggleDrawer, openDrawer, closeDrawer] = useDisclosure({
 		defaultOpen: true
 	});
 
@@ -143,9 +144,9 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 			<Drawer
 				placement="left"
 				isOpen={isPanelOpen}
-				onClose={closePanel}
-				onOpen={openPanel}
-				onToggle={togglePanel}
+				close={closeDrawer}
+				open={openDrawer}
+				toggle={toggleDrawer}
 				showOverlay={true}
 				showHandler={true}
 			>
