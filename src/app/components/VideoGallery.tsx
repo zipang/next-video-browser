@@ -22,20 +22,48 @@ import { VideoPlayer } from "./VideoPlayer";
 import type { Video } from "./PlayerStateProvider";
 
 import "./video-gallery-styles.css";
+import { Drawer } from "./base/Drawer";
 
 export interface VideoGalleryProps {
 	videos: Video[];
 }
 
-export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
-	const [selectedVideo, setSelectedVideo] = useState(videos[0]);
-	const launcherRef = useRef<HTMLDivElement>(null);
-	const [isPanelOpen, togglePanel] = useDisclosure({ initialState: true });
+interface VignetteProps {
+	video: Video;
+	active: boolean;
+	onSelection: (vid: Video) => void;
+}
 
-	// Handle video selection
-	const handleSelectVideo = (video: (typeof videos)[0]) => {
-		setSelectedVideo(video);
-	};
+const Vignette: FC<VignetteProps> = ({ video, active, onSelection }) => (
+	<Center
+		key={`${video.id}`}
+		className={clsx("vignette", active && "active")}
+		cursor="pointer"
+		onClick={() => onSelection(video)}
+		padding="2"
+		position="relative"
+	>
+		<Image alt={video.title} src={video.thumbnail} width="240" height="180" />
+		<Text position="absolute" color="white" textAlign="center">
+			Ep#{video.id}
+			<br />
+			{video.title}
+		</Text>
+	</Center>
+);
+
+interface VideoSliderProps {
+	videos: Video[];
+	selectedVideo: Video;
+	setSelectedVideo: (vid: Video) => void;
+}
+
+const VideoSlider: FC<VideoSliderProps> = ({
+	videos,
+	selectedVideo,
+	setSelectedVideo
+}) => {
+	const launcherRef = useRef<HTMLDivElement>(null);
 
 	// Implement infinite scrolling effect for the launcher
 	useEffect(() => {
@@ -61,95 +89,72 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 	}, []);
 
 	return (
-		<Flex as="aside" height="100vh" overflow="hidden" position="relative">
-			{/* Video Launcher - Left Side */}
+		<Box
+			as="nav"
+			height="100vh"
+			bg="brand.800"
+			overflow="hidden"
+			position="relative"
+			zIndex="10"
+		>
 			<Box
-				as="nav"
-				width={isPanelOpen ? "240px" : "0"}
-				height="100vh"
-				bg="brand.800"
-				transition="width 0.3s ease"
-				overflow="hidden"
-				position="relative"
-				zIndex="10"
+				ref={launcherRef}
+				height="100%"
+				backgroundColor="black"
+				overflowY="scroll"
+				css={{
+					"&::-webkit-scrollbar": {
+						width: "6px"
+					},
+					"&::-webkit-scrollbar-track": {
+						background: "#1A1A1A"
+					},
+					"&::-webkit-scrollbar-thumb": {
+						background: "#333333"
+					},
+					scrollbarWidth: "thin",
+					scrollbarColor: "#333333 #1A1A1A"
+				}}
+				paddingY="2"
 			>
-				<Box
-					ref={launcherRef}
-					height="100%"
-					backgroundColor="black"
-					// backgroundImage={`url(/movie.svg)`}
-					// backgroundRepeat="repeat-y"
-					// backgroundPosition="center"
-					overflowY="scroll"
-					css={{
-						"&::-webkit-scrollbar": {
-							width: "6px"
-						},
-						"&::-webkit-scrollbar-track": {
-							background: "#1A1A1A"
-						},
-						"&::-webkit-scrollbar-thumb": {
-							background: "#333333"
-						},
-						scrollbarWidth: "thin",
-						scrollbarColor: "#333333 #1A1A1A"
-					}}
-					paddingY="2"
-				>
-					{/* Duplicate videos at the beginning and end for infinite scroll effect */}
-					{[...videos, ...videos, ...videos].map((video, index) => (
-						<Center
-							key={`${video.id}-${index}`}
-							className={clsx(
-								"vignette",
-								selectedVideo.id === video.id && "active"
-							)}
-							cursor="pointer"
-							onClick={() => handleSelectVideo(video)}
-							padding="2"
-							position="relative"
-						>
-							<Image
-								alt={video.title}
-								src={video.thumbnail}
-								width="240"
-								height="180"
-							/>
-							<Text position="absolute" color="white" textAlign="center">
-								Ep#{video.id}
-								<br />
-								{video.title}
-							</Text>
-						</Center>
-					))}
-				</Box>
+				{/* Duplicate videos at the beginning and end for infinite scroll effect */}
+				{[...videos, ...videos].map((video, index) => (
+					<Vignette
+						video={video}
+						active={selectedVideo.id === video.id}
+						onSelection={setSelectedVideo}
+						key={`${video.id}-${index}`}
+					/>
+				))}
 			</Box>
+		</Box>
+	);
+};
 
-			{/* Button to deploy the panel */}
-			<Button
-				position="absolute"
-				left={isPanelOpen ? "240px" : "0"}
-				top="50%"
-				transform="translateY(-50%)"
-				zIndex="20"
-				height="60px"
-				width="20px"
-				borderRadius="0 4px 4px 0"
-				bg="brand.700"
-				_hover={{ bg: "brand.800" }}
-				onClick={togglePanel}
-				padding="0"
-				transition="left 0.3s ease"
+export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
+	const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+	const [isPanelOpen, togglePanel, closePanel, openPanel] = useDisclosure({
+		defaultOpen: true
+	});
+
+	return (
+		<main>
+			{/* Video Launcher - Left Side */}
+			<Drawer
+				placement="left"
+				isOpen={isPanelOpen}
+				onClose={closePanel}
+				onOpen={openPanel}
+				onToggle={togglePanel}
+				showOverlay={false}
+				showHandler={true}
 			>
-				<Box
-					as="span"
-					display="inline-block"
-					transform={isPanelOpen ? "rotate(180deg)" : "rotate(0deg)"}
-					transition="transform 0.3s ease"
-				>
-					&#10095;
-				</Box>
-			</Button>
+				<VideoSlider
+					videos={videos}
+					selectedVideo={selectedVideo}
+					setSelectedVideo={setSelectedVideo}
+				/>
+			</Drawer>
 
 			{/* Main Content Area */}
 			<Flex
@@ -164,7 +169,13 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 				<VideoPlayer width="100%" height="70vh" src={selectedVideo.src} />
 
 				{/* Video Information Section */}
-				<Grid templateColumns="repeat(2, 1fr)" gap={8} padding="8" bg="brand.900">
+				<Grid
+					templateColumns="repeat(2, 1fr)"
+					ml="240px"
+					gap={8}
+					padding="8"
+					bg="brand.900"
+				>
 					{/* Left Column - Title and Description */}
 					<GridItem>
 						<VStack align="flex-start">
@@ -210,6 +221,6 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 					</GridItem>
 				</Grid>
 			</Flex>
-		</Flex>
+		</main>
 	);
 };
