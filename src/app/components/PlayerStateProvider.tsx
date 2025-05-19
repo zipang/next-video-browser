@@ -1,11 +1,4 @@
-import {
-	useState,
-	createContext,
-	useContext,
-	type FC,
-	type PropsWithChildren,
-	ReactNode
-} from "react";
+import { useState, createContext, useContext, type FC, type ReactNode } from "react";
 
 export interface VideoResource {
 	title: string;
@@ -62,6 +55,7 @@ const EMPTY_STATE = {
 	playing: false
 } as PlayerState;
 
+// @ts-ignore don't pass the initial state right now
 const PlayerContext = createContext<PlayerState & PlayerMethods>();
 
 interface PlayerStateProviderProps {
