@@ -170,6 +170,7 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 
 				{/* Video Information Section */}
 				<Grid
+					as="section"
 					templateColumns="repeat(2, 1fr)"
 					ml="240px"
 					gap={8}

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useRef, useState, useEffect } from "react";
+import { type FC, useRef, useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { usePlayerState } from "./PlayerStateProvider";
 
@@ -74,7 +74,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src, width, height }) => {
 	}, [src]);
 
 	return (
-		<Box width={width} height={height} position="relative" bg="black">
+		<Box as="section" width={width} height={height} position="relative" bg="black">
 			<Box
 				as="video"
 				ref={videoElt}

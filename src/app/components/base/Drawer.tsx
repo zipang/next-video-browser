@@ -1,6 +1,6 @@
 import { useEffect, type FC, type ReactNode } from "react";
 import { useSwipeable, type SwipeableProps } from "react-swipeable";
-import { Box, Button, Portal } from "@chakra-ui/react";
+import { Box, Button, Center, Portal } from "@chakra-ui/react";
 
 import "./drawer-styles.css";
 
@@ -53,17 +53,16 @@ const SwipeHandler: FC<DrawerStateProps> = ({
 	const swipeHandlers = useSwipeable(swipeConfig);
 
 	return (
-		<Box
+		<Center
 			className={`swipe-handler swipe-handler--${placement} ${isOpen ? "swipe-handler--open" : ""}`}
 			aria-hidden={!isOpen}
 			// Spread swipe handlers
-
 			{...swipeHandlers}
 		>
 			<Button onClick={onToggle} borderRadius={2} bg="brand.700">
 				<span className="swipe-handler--icon">&#10095;</span>
 			</Button>
-		</Box>
+		</Center>
 	);
 };
 
