@@ -1,6 +1,7 @@
 import { useEffect, type FC, type ReactNode } from "react";
 import { useSwipeable, type SwipeableProps } from "react-swipeable";
 import { Box, Button, Portal } from "@chakra-ui/react";
+
 import "./drawer-styles.css";
 
 export type DrawerPlacement = "left" | "right";
@@ -20,17 +21,51 @@ export interface DrawerProps extends DrawerStateProps {
 	closeOnEsc?: boolean;
 }
 
-const SwipeHandler: FC<DrawerStateProps> = ({ isOpen, placement, onToggle, ...rest }) => (
-	<Box
-		className={`swipe-handler swipe-handler--${placement} ${isOpen ? "swipe-handler--open" : ""}`}
-		aria-hidden={!isOpen}
-		{...rest}
-	>
-		<Button onClick={onToggle} borderRadius={2} bg="brand.700">
-			<span className="swipe-handler--icon">&#10095;</span>
-		</Button>
-	</Box>
-);
+const swipeConfig: SwipeableProps = {
+	preventScrollOnSwipe: true, // Prevent body scroll when swiping on the drawer
+	trackMouse: true, // Optional: enable swipe with mouse for testing on desktop
+	delta: 10 // Minimum distance (px) before a swipe starts
+	// velocity: 0.3, // Minimum velocity (px/ms)
+	// threshold: 50, // Minimum distance (px)
+};
+
+/**
+ * An invisible border with a centered button that we can use to slide the Drawer open
+ */
+const SwipeHandler: FC<DrawerStateProps> = ({
+	isOpen,
+	placement,
+	onClose,
+	onOpen,
+	onToggle
+}) => {
+	// Configure swipe handlers effect based on placement
+	if (placement === "left") {
+		swipeConfig.onSwipedRight = onOpen;
+		swipeConfig.onSwipedLeft = onClose;
+	} else if (placement === "right") {
+		swipeConfig.onSwipedRight = onClose;
+		swipeConfig.onSwipedLeft = onOpen;
+	}
+
+	swipeConfig.onTap = isOpen ? onClose : onOpen;
+
+	const swipeHandlers = useSwipeable(swipeConfig);
+
+	return (
+		<Box
+			className={`swipe-handler swipe-handler--${placement} ${isOpen ? "swipe-handler--open" : ""}`}
+			aria-hidden={!isOpen}
+			// Spread swipe handlers
+
+			{...swipeHandlers}
+		>
+			<Button onClick={onToggle} borderRadius={2} bg="brand.700">
+				<span className="swipe-handler--icon">&#10095;</span>
+			</Button>
+		</Box>
+	);
+};
 
 // Remove size prop from interface
 export const Drawer: FC<DrawerProps> = ({
@@ -59,33 +94,6 @@ export const Drawer: FC<DrawerProps> = ({
 		};
 	}, [isOpen, onClose, closeOnEsc]);
 
-	// Configure swipe handlers based on placement
-	const swipeConfig: SwipeableProps = {
-		preventScrollOnSwipe: true, // Prevent body scroll when swiping on the drawer
-		trackMouse: true, // Optional: enable swipe with mouse for testing on desktop
-		delta: 10 // Minimum distance (px) before a swipe starts
-		// velocity: 0.3, // Minimum velocity (px/ms)
-		// threshold: 50, // Minimum distance (px)
-	};
-
-	if (placement === "left") {
-		swipeConfig.onSwipedRight = onOpen;
-		swipeConfig.onSwipedLeft = onClose;
-	} else if (placement === "right") {
-		swipeConfig.onSwipedRight = onClose;
-		swipeConfig.onSwipedLeft = onOpen;
-	} else if (placement === "top") {
-		swipeConfig.onSwipedDown = onOpen;
-		swipeConfig.onSwipedUp = onClose;
-	} else if (placement === "bottom") {
-		swipeConfig.onSwipedDown = onClose;
-		swipeConfig.onSwipedUp = onOpen;
-	}
-
-	swipeConfig.onTap = isOpen ? onClose : onOpen;
-
-	const swipeHandlers = useSwipeable(swipeConfig);
-
 	const drawerContentClasses = `drawer-content drawer-content--${placement} ${isOpen ? "drawer-content--open" : ""}`;
 	const overlayClasses = `drawer-overlay ${isOpen && showOverlay ? "drawer-overlay--open" : ""}`;
 
@@ -95,21 +103,19 @@ export const Drawer: FC<DrawerProps> = ({
 				<Box className={overlayClasses} onClick={onClose} aria-hidden={!isOpen} />
 			)}
 			<Box
-				// Spread swipe handlers onto the Box
 				as="aside" // Semantic element for a sidebar/drawer
 				className={drawerContentClasses}
-				role="dialog"
-				aria-modal="true"
 				aria-hidden={!isOpen}
 				tabIndex={-1} // Makes the drawer focusable, e.g., for Esc key, though handled globally here
 			>
 				{children}
 				{showHandler && (
 					<SwipeHandler
-						onToggle={onToggle}
 						isOpen={isOpen}
+						onClose={onClose}
+						onOpen={onOpen}
+						onToggle={onToggle}
 						placement={placement}
-						{...swipeHandlers}
 					/>
 				)}
 			</Box>
