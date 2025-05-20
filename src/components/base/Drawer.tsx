@@ -61,11 +61,9 @@ export const Drawer: FC<DrawerProps> = ({
 	showHandler = true,
 	closeOnEsc = true
 }) => {
-	// Listen to swipe event on the overlay layer
-	const swipeTarget = useRef(null);
+	// Listen to swipe events
 	useSwipe({
 		stopPropagation: true,
-		target: swipeTarget,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
 				return;
@@ -104,7 +102,6 @@ export const Drawer: FC<DrawerProps> = ({
 		<Portal>
 			{showOverlay && (
 				<Box
-					ref={swipeTarget}
 					className={clsx("drawer-overlay", isOpen && "drawer-overlay--open")}
 					onClick={handleOverlayClick}
 				/>
