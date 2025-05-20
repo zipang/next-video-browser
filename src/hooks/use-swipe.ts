@@ -64,12 +64,10 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 	 */
 	useLayoutEffect(() => {
 		const handleTouchStart = (evt: TouchEvent) => {
-			evt.preventDefault();
 			setStartPoint(evt.touches[0]);
 			setEndPoint(null);
 		};
 		const handleTouchEnd = (evt: TouchEvent) => {
-			evt.preventDefault();
 			setEndPoint(evt.touches[0]);
 			if (stopPropagation) {
 				evt.stopPropagation();
