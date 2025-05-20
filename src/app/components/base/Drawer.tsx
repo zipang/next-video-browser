@@ -1,7 +1,14 @@
-import { useEffect, type FC, type ReactNode } from "react";
+import {
+	useEffect,
+	useRef,
+	type FC,
+	type MouseEventHandler,
+	type ReactNode
+} from "react";
 import { Box, Button, Center, Portal } from "@chakra-ui/react";
 
 import "./drawer-styles.css";
+import { useSwipe } from "@hooks/use-swipe";
 
 export type DrawerPlacement = "left" | "right";
 
@@ -30,7 +37,7 @@ const SwipeHandler: FC<DrawerStateProps> = ({
 	open,
 	toggle
 }) => {
-	const handleToggle = (evt) => {
+	const handleToggle: MouseEventHandler = (evt) => {
 		evt.preventDefault();
 		toggle();
 	};
@@ -60,6 +67,23 @@ export const Drawer: FC<DrawerProps> = ({
 	showHandler = true,
 	closeOnEsc = true
 }) => {
+	// Listen to swipe event on the overlaty layer
+	const refOverlay = useRef(null);
+	useSwipe(refOverlay, {
+		detectMouseEvents: true,
+		onSwipe: (swipeDirection) => {
+			if (swipeDirection === "top" || swipeDirection === "bottom") {
+				return;
+			}
+			if (placement === "left") {
+				return swipeDirection === "right" ? open() : close();
+			}
+			if (placement === "right") {
+				return swipeDirection === "left" ? open() : close();
+			}
+		}
+	});
+
 	// Effect for Escape key
 	useEffect(() => {
 		if (!closeOnEsc) return;
@@ -80,9 +104,7 @@ export const Drawer: FC<DrawerProps> = ({
 
 	return (
 		<Portal>
-			{showOverlay && (
-				<Box className={overlayClasses} onClick={close} aria-hidden={!isOpen} />
-			)}
+			{showOverlay && <Box ref={refOverlay} className={overlayClasses} />}
 			<Box
 				as="aside" // Semantic element for a sidebar/drawer
 				className={drawerContentClasses}
