@@ -68,7 +68,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 			setEndPoint(null);
 		};
 		const handleTouchEnd = (evt: TouchEvent) => {
-			setEndPoint(evt.touches[0]);
+			setEndPoint(evt.changedTouches[0] || evt.touches[0]);
 			if (stopPropagation) {
 				evt.stopPropagation();
 			}
