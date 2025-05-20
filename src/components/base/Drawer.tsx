@@ -63,7 +63,7 @@ export const Drawer: FC<DrawerProps> = ({
 }) => {
 	// Listen to swipe event on the overlay
 	useSwipe({
-		preventDefault: true,
+		preventDefault: isOpen,
 		stopPropagation: true,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
@@ -76,7 +76,7 @@ export const Drawer: FC<DrawerProps> = ({
 				return swipeDirection === "left" ? open() : close();
 			}
 		},
-		onTap: toggle
+		onTap: close
 	});
 
 	// Effect for Escape key
