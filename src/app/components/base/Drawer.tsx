@@ -1,14 +1,8 @@
-import {
-	useEffect,
-	useRef,
-	type FC,
-	type MouseEventHandler,
-	type ReactNode
-} from "react";
+import { useEffect, type FC, type MouseEventHandler, type ReactNode } from "react";
 import { Box, Button, Center, Portal } from "@chakra-ui/react";
+import { useSwipe } from "@hooks/use-swipe";
 
 import "./drawer-styles.css";
-import { useSwipe } from "@hooks/use-swipe";
 
 export type DrawerPlacement = "left" | "right";
 
@@ -68,8 +62,6 @@ export const Drawer: FC<DrawerProps> = ({
 }) => {
 	// Listen to swipe event on the overlaty layer
 	useSwipe({
-		detectMouseEvents: true,
-		stopPropagation: true,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
 				return;
