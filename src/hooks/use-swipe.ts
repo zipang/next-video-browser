@@ -64,14 +64,15 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 	 */
 	useLayoutEffect(() => {
 		const handleTouchStart = (evt: TouchEvent) => {
+			evt.preventDefault();
 			setStartPoint(evt.touches[0]);
 			setEndPoint(null);
 		};
-		const handleTouchMove = (evt: TouchEvent) => {
+		const handleTouchEnd = (evt: TouchEvent) => {
+			evt.preventDefault();
 			setEndPoint(evt.touches[0]);
 			if (stopPropagation) {
 				evt.stopPropagation();
-				evt.preventDefault();
 			}
 		};
 		const handleMouseDown = (evt: MouseEvent) => {
@@ -85,7 +86,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 		const elt = target ? target.current : window;
 
 		elt.addEventListener("touchstart", handleTouchStart);
-		elt.addEventListener("touchmove", handleTouchMove);
+		elt.addEventListener("touchend", handleTouchEnd);
 
 		if (detectMouseEvents) {
 			elt.addEventListener("mousedown", handleMouseDown);
@@ -94,7 +95,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 
 		return () => {
 			elt.removeEventListener("touchstart", handleTouchStart);
-			elt.removeEventListener("touchmove", handleTouchMove);
+			elt.removeEventListener("touchend", handleTouchEnd);
 			if (detectMouseEvents) {
 				elt.removeEventListener("mousedown", handleMouseDown);
 				elt.removeEventListener("mouseup", handleMouseUp);
