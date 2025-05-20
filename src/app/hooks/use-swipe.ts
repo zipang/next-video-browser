@@ -34,8 +34,7 @@ const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
 
 /**
  * Detect a touch or swipe event
- * @ref https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientY
- * @param options threshold, callback that will be called after a touch event ends..
+ * @param options pass onSwipe() as the callback that will be called after a swipe event ends..
  */
 export const useSwipe = <TouchElement extends HTMLElement>(opts: UseTouchOptions) => {
 	const {
@@ -97,7 +96,8 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseTouchOptions
 		if (startPoint && endPoint) {
 			// Mesure our vector
 			const x = endPoint.clientX - startPoint.clientX;
-			// The viewport has its y axis inverted so we redress it
+			// The viewport has its Y axis inverted so we redress it so that it points UP
+			// @ref https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientY
 			const y = startPoint.clientY - endPoint.clientY;
 
 			let dir: Direction;
