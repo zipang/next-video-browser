@@ -1,7 +1,7 @@
 import { useState, createContext, useContext, type FC, type ReactNode } from "react";
 
 export interface VideoResource {
-	title: string;
+	name: string;
 	url: string;
 }
 
