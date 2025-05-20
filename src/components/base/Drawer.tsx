@@ -6,6 +6,7 @@ import {
 	type ReactNode
 } from "react";
 import { Box, Button, Center, Portal } from "@chakra-ui/react";
+import clsx from "clsx";
 import { useSwipe } from "@hooks/use-swipe";
 
 import "./drawer-styles.css";
@@ -30,13 +31,7 @@ export interface DrawerProps extends DrawerStateProps {
 /**
  * An invisible border with a centered button that we can use to slide the Drawer open
  */
-const SwipeHandler: FC<DrawerStateProps> = ({
-	isOpen,
-	placement,
-	close,
-	open,
-	toggle
-}) => {
+const SwipeHandler: FC<DrawerStateProps> = ({ isOpen, placement, toggle }) => {
 	const handleToggle: MouseEventHandler = (evt) => {
 		evt.preventDefault();
 		toggle();
@@ -99,34 +94,30 @@ export const Drawer: FC<DrawerProps> = ({
 		};
 	}, [isOpen, close, closeOnEsc]);
 
-	const drawerContentClasses = `drawer-content drawer-content--${placement} ${isOpen ? "drawer-content--open" : ""}`;
-	const overlayClasses = `drawer-overlay ${isOpen && showOverlay ? "drawer-overlay--open" : ""}`;
-
-	const handleClose: MouseEventHandler = (evt) => {
+	const handleOverlayClick: MouseEventHandler = (evt) => {
 		evt.preventDefault();
+		evt.stopPropagation();
 		close();
 	};
 
 	return (
 		<Portal>
 			{showOverlay && (
-				<Box ref={swipeTarget} className={overlayClasses} onClick={handleClose} />
+				<Box
+					ref={swipeTarget}
+					className={clsx("drawer-overlay", isOpen && "drawer-overlay--open")}
+					onClick={handleOverlayClick}
+				/>
 			)}
 			<Box
-				as="aside" // Semantic element for a sidebar/drawer
-				className={drawerContentClasses}
+				as="aside"
+				className={clsx("drawer-content", placement, isOpen && "open")}
 				aria-hidden={!isOpen}
-				tabIndex={-1} // Makes the drawer focusable, e.g., for Esc key, though handled globally here
+				tabIndex={-1} // Makes the drawer focusable, e.g., for ENTER
 			>
 				{children}
 				{showHandler && (
-					<SwipeHandler
-						isOpen={isOpen}
-						close={close}
-						open={open}
-						toggle={toggle}
-						placement={placement}
-					/>
+					<SwipeHandler isOpen={isOpen} toggle={toggle} placement={placement} />
 				)}
 			</Box>
 		</Portal>

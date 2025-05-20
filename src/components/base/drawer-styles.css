@@ -128,23 +128,23 @@
 }
 
 /* Placement specific styles */
-.drawer-content--left {
+.drawer-content.left {
 	top: 0;
 	left: 0;
 	transform: translateX(calc(-100% + var(--drawer-handler-size)));
 	padding-right: var(--drawer-handler-size);
 }
-.drawer-content--left.drawer-content--open {
+.drawer-content.left.open {
 	transform: translateX(0);
 }
 
-.drawer-content--right {
+.drawer-content.right {
 	top: 0;
 	right: 0;
 	padding-left: var(--drawer-handler-size);
 	transform: translateX(calc(100% - var(--drawer-handler-size)));
 }
-.drawer-content--right.drawer-content--open {
+.drawer-content.right.open {
 	transform: translateX(0);
 }
 
