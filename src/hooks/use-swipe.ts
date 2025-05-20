@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useState, type RefObject } from "react";
 type Direction = "top" | "bottom" | "left" | "right";
 type Vector = [number, number];
 
-interface UseTouchOptions {
+interface UseSwipeOptions {
 	/**
 	 * A specific DOM element to attach the touch event
 	 * @default window
@@ -33,10 +33,21 @@ interface UseTouchOptions {
 const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
 
 /**
+ * Direction of a vector
+ */
+const inferDirection = ([x, y]: Vector) => {
+	if (Math.abs(x) > Math.abs(y)) {
+		return x > 0 ? "right" : "left";
+	}
+
+	return y > 0 ? "top" : "bottom";
+};
+
+/**
  * Detect a touch or swipe event
  * @param options pass onSwipe() as the callback that will be called after a swipe event ends..
  */
-export const useSwipe = <TouchElement extends HTMLElement>(opts: UseTouchOptions) => {
+export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions) => {
 	const {
 		target,
 		detectMouseEvents = false,
@@ -100,27 +111,15 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseTouchOptions
 			// @ref https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientY
 			const y = startPoint.clientY - endPoint.clientY;
 
-			let dir: Direction;
-			if (Math.abs(x) > Math.abs(y)) {
-				if (x > 0) {
-					dir = "right";
-				} else {
-					dir = "left";
-				}
-			} else {
-				if (y > 0) {
-					dir = "top";
-				} else {
-					dir = "bottom";
-				}
-			}
-
 			if (norm([x, y]) > threshold) {
+				const dir = inferDirection([x, y]);
+
 				console.log(`Swipe ${dir} (${x}, ${y})`);
 				onSwipe(dir, [x, y]);
 			} else if (onTap && (startPoint as Touch).radiusX) {
 				onTap(startPoint as Touch);
 			}
+
 			setStartPoint(null);
 			setEndPoint(null);
 		}

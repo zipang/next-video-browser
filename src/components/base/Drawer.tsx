@@ -1,4 +1,10 @@
-import { useEffect, type FC, type MouseEventHandler, type ReactNode } from "react";
+import {
+	useEffect,
+	useRef,
+	type FC,
+	type MouseEventHandler,
+	type ReactNode
+} from "react";
 import { Box, Button, Center, Portal } from "@chakra-ui/react";
 import { useSwipe } from "@hooks/use-swipe";
 
@@ -60,8 +66,11 @@ export const Drawer: FC<DrawerProps> = ({
 	showHandler = true,
 	closeOnEsc = true
 }) => {
-	// Listen to swipe event on the overlaty layer
+	// Listen to swipe event on the overlay layer
+	const swipeTarget = useRef(null);
 	useSwipe({
+		stopPropagation: true,
+		target: swipeTarget,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
 				return;
@@ -100,7 +109,9 @@ export const Drawer: FC<DrawerProps> = ({
 
 	return (
 		<Portal>
-			{showOverlay && <Box className={overlayClasses} onClick={handleClose} />}
+			{showOverlay && (
+				<Box ref={swipeTarget} className={overlayClasses} onClick={handleClose} />
+			)}
 			<Box
 				as="aside" // Semantic element for a sidebar/drawer
 				className={drawerContentClasses}
