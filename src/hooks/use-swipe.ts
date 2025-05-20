@@ -14,7 +14,12 @@ interface UseSwipeOptions {
 	 */
 	detectMouseEvents?: boolean;
 	/**
-	 * Stop propagation when a swipe event has been detected
+	 * Prevent default (will prevent a click event to occur)
+	 * @default false
+	 */
+	preventDefault?: boolean;
+	/**
+	 * Stop propagation to further layers
 	 */
 	stopPropagation?: boolean;
 	/**
@@ -51,6 +56,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 	const {
 		target,
 		detectMouseEvents = false,
+		preventDefault = false,
 		stopPropagation = false,
 		threshold = 25,
 		onSwipe,
@@ -64,16 +70,14 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 	 */
 	useLayoutEffect(() => {
 		const handleTouchStart = (evt: TouchEvent) => {
-			evt.preventDefault();
 			setStartPoint(evt.touches[0]);
 			setEndPoint(null);
+			if (preventDefault) evt.preventDefault();
 		};
 		const handleTouchEnd = (evt: TouchEvent) => {
-			evt.preventDefault();
 			setEndPoint(evt.changedTouches[0] || evt.touches[0]);
-			if (stopPropagation) {
-				evt.stopPropagation();
-			}
+			if (preventDefault) evt.preventDefault();
+			if (stopPropagation) evt.stopPropagation();
 		};
 		const handleMouseDown = (evt: MouseEvent) => {
 			setStartPoint(evt);
@@ -101,7 +105,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 				elt.removeEventListener("mouseup", handleMouseUp);
 			}
 		};
-	}, [target, detectMouseEvents, stopPropagation]);
+	}, [target, detectMouseEvents, preventDefault, stopPropagation]);
 
 	/* Register a touch or swipe event */
 	useEffect(() => {
