@@ -14,6 +14,10 @@ interface UseTouchOptions {
 	 */
 	detectMouseEvents?: boolean;
 	/**
+	 * Stop propagation when a swipe event has been detected
+	 */
+	stopPropagation?: boolean;
+	/**
 	 * Number of pixel before the event is considered a swipe
 	 * (under that number it's a 'tap')
 	 * @default 25px
@@ -37,6 +41,7 @@ const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
 export const useSwipe = <TouchElement extends HTMLElement>({
 	ref,
 	detectMouseEvents = false,
+	stopPropagation = false,
 	threshold = 25,
 	onSwipe,
 	onTap
@@ -52,6 +57,10 @@ export const useSwipe = <TouchElement extends HTMLElement>({
 		};
 		const handleTouchMove = (evt: TouchEvent) => {
 			setEndPoint(evt.touches[0]);
+			if (stopPropagation) {
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
 		};
 		const handleMouseDown = (evt: MouseEvent) => {
 			console.log("start dragging");

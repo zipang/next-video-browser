@@ -68,9 +68,8 @@ export const Drawer: FC<DrawerProps> = ({
 	closeOnEsc = true
 }) => {
 	// Listen to swipe event on the overlaty layer
-	const refOverlay = useRef(null);
-	useSwipe(refOverlay, {
-		detectMouseEvents: true,
+	useSwipe({
+		detectMouseEvents: false,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
 				return;
@@ -102,9 +101,14 @@ export const Drawer: FC<DrawerProps> = ({
 	const drawerContentClasses = `drawer-content drawer-content--${placement} ${isOpen ? "drawer-content--open" : ""}`;
 	const overlayClasses = `drawer-overlay ${isOpen && showOverlay ? "drawer-overlay--open" : ""}`;
 
+	const handleClose: MouseEventHandler = (evt) => {
+		evt.preventDefault();
+		close();
+	};
+
 	return (
 		<Portal>
-			{showOverlay && <Box ref={refOverlay} className={overlayClasses} />}
+			{showOverlay && <Box className={overlayClasses} onClick={handleClose} />}
 			<Box
 				as="aside" // Semantic element for a sidebar/drawer
 				className={drawerContentClasses}
