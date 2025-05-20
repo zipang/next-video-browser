@@ -5,6 +5,11 @@ type Vector = [number, number];
 
 interface UseTouchOptions {
 	/**
+	 * A specific element on which register the touch event
+	 * @default window
+	 */
+	ref?: RefObject<TouchElement | null>;
+	/**
 	 * Register mousedown and mouseup events to track mouse swipes
 	 */
 	detectMouseEvents?: boolean;
@@ -29,10 +34,13 @@ const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
  * @param ref a reference on the element that will record the events
  * @param options threshold, callback that will be called after a touch event ends..
  */
-export const useSwipe = <TouchElement extends HTMLElement>(
-	ref: RefObject<TouchElement | null>,
-	{ detectMouseEvents = false, threshold = 25, onSwipe, onTap }: UseTouchOptions
-) => {
+export const useSwipe = <TouchElement extends HTMLElement>({
+	ref,
+	detectMouseEvents = false,
+	threshold = 25,
+	onSwipe,
+	onTap
+}: UseTouchOptions) => {
 	const [startPoint, setStartPoint] = useState<Touch | MouseEvent | null>(null);
 	const [endPoint, setEndPoint] = useState<Touch | MouseEvent | null>(null);
 
@@ -55,8 +63,7 @@ export const useSwipe = <TouchElement extends HTMLElement>(
 			setEndPoint(evt);
 		};
 
-		const target = ref?.current;
-		if (!target) return;
+		const target = ref?.current ?? window;
 
 		target.addEventListener("touchstart", handleTouchStart);
 		target.addEventListener("touchmove", handleTouchMove);
@@ -104,8 +111,8 @@ export const useSwipe = <TouchElement extends HTMLElement>(
 			if (norm([x, y]) > threshold) {
 				console.log(`Swipe ${dir} (${x}, ${y})`);
 				onSwipe(dir, [x, y]);
-			} else if (startPoint instanceof Touch && onTap) {
-				onTap(startPoint);
+			} else if (onTap && (startPoint as Touch).radiusX) {
+				onTap(startPoint as Touch);
 			}
 			setStartPoint(null);
 			setEndPoint(null);
