@@ -23,8 +23,9 @@
 		// Path aliases
 		"baseUrl": ".",
 		"paths": {
-			"@hooks/*": ["./src/app/hooks/*"],
-			"@icons/*": ["./src/app/components/icons/*"]
+			"@components/*": ["./src/components/*"],
+			"@hooks/*": ["./src/hooks/*"],
+			"@icons/*": ["./src/components/icons/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
