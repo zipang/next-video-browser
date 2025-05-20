@@ -1,14 +1,14 @@
-import { useEffect, useState, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useState, type RefObject } from "react";
 
 type Direction = "top" | "bottom" | "left" | "right";
 type Vector = [number, number];
 
 interface UseTouchOptions {
 	/**
-	 * A specific element on which register the touch event
+	 * A specific DOM element to attach the touch event
 	 * @default window
 	 */
-	ref?: RefObject<TouchElement | null>;
+	target?: RefObject<TouchElement | null>;
 	/**
 	 * Register mousedown and mouseup events to track mouse swipes
 	 */
@@ -37,19 +37,22 @@ const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
  * @ref https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientY
  * @param options threshold, callback that will be called after a touch event ends..
  */
-export const useSwipe = <TouchElement extends HTMLElement>({
-	ref,
-	detectMouseEvents = false,
-	stopPropagation = false,
-	threshold = 25,
-	onSwipe,
-	onTap
-}: UseTouchOptions) => {
+export const useSwipe = <TouchElement extends HTMLElement>(opts: UseTouchOptions) => {
+	const {
+		target,
+		detectMouseEvents = false,
+		stopPropagation = false,
+		threshold = 25,
+		onSwipe,
+		onTap
+	} = opts;
 	const [startPoint, setStartPoint] = useState<Touch | MouseEvent | null>(null);
 	const [endPoint, setEndPoint] = useState<Touch | MouseEvent | null>(null);
 
-	/* Register the touch event listeners */
-	useEffect(() => {
+	/*
+	 * Register the touch event listeners
+	 */
+	useLayoutEffect(() => {
 		const handleTouchStart = (evt: TouchEvent) => {
 			setStartPoint(evt.touches[0]);
 			setEndPoint(null);
@@ -62,36 +65,32 @@ export const useSwipe = <TouchElement extends HTMLElement>({
 			}
 		};
 		const handleMouseDown = (evt: MouseEvent) => {
-			console.log("start dragging");
 			setStartPoint(evt);
 			setEndPoint(null);
 		};
 		const handleMouseUp = (evt: MouseEvent) => {
-			console.log("end dragging");
 			setEndPoint(evt);
 		};
 
-		const target = ref?.current ?? window;
+		const elt = target ? target.current : window;
 
-		target.addEventListener("touchstart", handleTouchStart);
-		target.addEventListener("touchmove", handleTouchMove);
+		elt.addEventListener("touchstart", handleTouchStart);
+		elt.addEventListener("touchmove", handleTouchMove);
 
 		if (detectMouseEvents) {
-			target.addEventListener("mousedown", handleMouseDown);
-			target.addEventListener("mouseup", handleMouseUp);
-			console.log("Registered mouse events");
+			elt.addEventListener("mousedown", handleMouseDown);
+			elt.addEventListener("mouseup", handleMouseUp);
 		}
 
 		return () => {
-			target.removeEventListener("touchstart", handleTouchStart);
-			target.removeEventListener("touchmove", handleTouchMove);
+			elt.removeEventListener("touchstart", handleTouchStart);
+			elt.removeEventListener("touchmove", handleTouchMove);
 			if (detectMouseEvents) {
-				target.removeEventListener("mousedown", handleMouseDown);
-				target.removeEventListener("mouseup", handleMouseUp);
-				console.log("Removed mouse events");
+				elt.removeEventListener("mousedown", handleMouseDown);
+				elt.removeEventListener("mouseup", handleMouseUp);
 			}
 		};
-	}, [ref]);
+	}, [target, detectMouseEvents, stopPropagation]);
 
 	/* Register a touch or swipe event */
 	useEffect(() => {
