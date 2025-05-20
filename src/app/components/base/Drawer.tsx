@@ -70,6 +70,7 @@ export const Drawer: FC<DrawerProps> = ({
 	// Listen to swipe event on the overlaty layer
 	useSwipe({
 		detectMouseEvents: false,
+		stopPropagation: true,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
 				return;

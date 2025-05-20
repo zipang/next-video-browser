@@ -35,7 +35,6 @@ const norm = (v: Vector) => Math.sqrt(v[0] ** 2 + v[1] ** 2);
 /**
  * Detect a touch or swipe event
  * @ref https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientY
- * @param ref a reference on the element that will record the events
  * @param options threshold, callback that will be called after a touch event ends..
  */
 export const useSwipe = <TouchElement extends HTMLElement>({
