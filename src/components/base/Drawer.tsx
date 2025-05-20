@@ -61,8 +61,11 @@ export const Drawer: FC<DrawerProps> = ({
 	showHandler = true,
 	closeOnEsc = true
 }) => {
-	// Listen to swipe event
+	// Listen to swipe event on the overlay
+	const overlayTarget = useRef(null);
 	useSwipe({
+		target: overlayTarget,
+		preventDefault: true,
 		stopPropagation: true,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
@@ -74,7 +77,8 @@ export const Drawer: FC<DrawerProps> = ({
 			if (placement === "right") {
 				return swipeDirection === "left" ? open() : close();
 			}
-		}
+		},
+		onTap: toggle
 	});
 
 	// Effect for Escape key
@@ -102,6 +106,7 @@ export const Drawer: FC<DrawerProps> = ({
 		<Portal>
 			{showOverlay && (
 				<Box
+					ref={overlayTarget}
 					className={clsx("drawer-overlay", isOpen && "drawer-overlay--open")}
 					onClick={handleOverlayClick}
 				/>
