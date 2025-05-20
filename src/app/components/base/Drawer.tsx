@@ -45,10 +45,9 @@ const SwipeHandler: FC<DrawerStateProps> = ({
 	return (
 		<Center
 			className={`swipe-handler swipe-handler--${placement} ${isOpen ? "swipe-handler--open" : ""}`}
-			aria-hidden={!isOpen}
-			// Spread swipe handlers
+			onClick={handleToggle}
 		>
-			<Button onClick={handleToggle} borderRadius={2} bg="brand.700">
+			<Button borderRadius={2} bg="brand.700">
 				<span className="swipe-handler--icon">&#10095;</span>
 			</Button>
 		</Center>
@@ -69,7 +68,7 @@ export const Drawer: FC<DrawerProps> = ({
 }) => {
 	// Listen to swipe event on the overlaty layer
 	useSwipe({
-		detectMouseEvents: false,
+		detectMouseEvents: true,
 		stopPropagation: true,
 		onSwipe: (swipeDirection) => {
 			if (swipeDirection === "top" || swipeDirection === "bottom") {
