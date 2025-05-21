@@ -55,7 +55,7 @@ export const videosSchema = v.array(videoSchema);
 export const validateVideos = (data: unknown): Video[] => {
 	try {
 		// Validate the data against the schema
-		return v.parse(videosSchema, data);
+		return v.parse(videosSchema, data) as Video[];
 	} catch (err) {
 		// Handle the error
 		console.error("Videos schema validation error:", err);
