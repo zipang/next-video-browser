@@ -3,6 +3,7 @@ import { Virtuoso } from "react-virtuoso";
 import { useRef, type FC } from "react";
 import Image from "next/image";
 import { clsx } from "clsx";
+import memoize from "micro-memoize";
 import type { Video } from "./PlayerStateProvider";
 
 import "./video-slider-styles.css";
@@ -48,7 +49,30 @@ export const VideoSlider: FC<VideoSliderProps> = ({
 	const initialIndex = totalVideos / 2;
 	const virtuosoRef = useRef<any>(null);
 
-	const getVideo = (index: number) => videos[index % videos.length];
+	const cachedVignette = memoize(
+		(index: number, active: boolean) => (
+			<Vignette
+				video={videos[index]}
+				active={active}
+				onSelection={setSelectedVideo}
+			/>
+		),
+		{
+			maxSize: totalVideos * 2
+		}
+	);
+
+	const getVideo = (virtualIndex: number) => {
+		const index = virtualIndex % videos.length;
+		const video = videos[index];
+
+		if (!video) {
+			throw new Error(`Video not found for index: ${index}`);
+		}
+		const active = video.id === selectedVideo.id;
+
+		return cachedVignette(index, active);
+	};
 
 	// Center the initial vignette on mount
 	useSafeLayoutEffect(() => {
@@ -76,16 +100,7 @@ export const VideoSlider: FC<VideoSliderProps> = ({
 				overscan={{ main: 2, reverse: 2 }}
 				totalCount={totalVideos}
 				initialTopMostItemIndex={initialIndex}
-				itemContent={(index: number) => {
-					const video = getVideo(index);
-					return (
-						<Vignette
-							video={video}
-							active={selectedVideo.id === video.id}
-							onSelection={setSelectedVideo}
-						/>
-					);
-				}}
+				itemContent={getVideo}
 			/>
 		</Box>
 	);
