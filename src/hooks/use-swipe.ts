@@ -130,9 +130,6 @@ export const useSwipe = ({
 			} else if (onTap && (startPoint as Touch).radiusX) {
 				onTap(startPoint as Touch);
 			}
-
-			setStartPoint(null);
-			setEndPoint(null);
 		}
 	}, [startPoint, endPoint, onSwipe, onTap, threshold]);
 };
