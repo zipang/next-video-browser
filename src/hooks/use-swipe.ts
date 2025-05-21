@@ -5,10 +5,18 @@ type Vector = [number, number];
 
 interface UseSwipeOptions {
 	/**
+	 * Callback for swipe events
+	 */
+	onSwipe: (direction: Direction, vector: Vector) => void;
+	/**
+	 * Callback for tap events
+	 */
+	onTap?: (origin: Touch) => void;
+	/**
 	 * A specific DOM element to attach the touch event
 	 * @default window
 	 */
-	target?: RefObject<TouchElement | null>;
+	target?: RefObject<HTMLElement | null>;
 	/**
 	 * Register mousedown and mouseup events to track mouse swipes
 	 */
@@ -28,8 +36,6 @@ interface UseSwipeOptions {
 	 * @default 25px
 	 */
 	threshold?: number;
-	onSwipe: (direction: Direction, vector: Vector) => void;
-	onTap?: (origin: Touch) => void;
 }
 
 /**
@@ -50,9 +56,9 @@ const inferDirection = ([x, y]: Vector) => {
 
 /**
  * Detect a touch or swipe event
- * @param options pass onSwipe() as the callback that will be called after a swipe event ends..
+ * @param opts.onSwipe Callback for swipe events
  */
-export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions) => {
+export const useSwipe = (opts: UseSwipeOptions) => {
 	const {
 		target,
 		detectMouseEvents = false,
@@ -88,21 +94,22 @@ export const useSwipe = <TouchElement extends HTMLElement>(opts: UseSwipeOptions
 		};
 
 		const elt = target ? target.current : window;
+		if (!elt) return;
 
-		elt.addEventListener("touchstart", handleTouchStart);
-		elt.addEventListener("touchend", handleTouchEnd);
+		elt.addEventListener("touchstart", handleTouchStart as EventListener);
+		elt.addEventListener("touchend", handleTouchEnd as EventListener);
 
 		if (detectMouseEvents) {
-			elt.addEventListener("mousedown", handleMouseDown);
-			elt.addEventListener("mouseup", handleMouseUp);
+			elt.addEventListener("mousedown", handleMouseDown as EventListener);
+			elt.addEventListener("mouseup", handleMouseUp as EventListener);
 		}
 
 		return () => {
-			elt.removeEventListener("touchstart", handleTouchStart);
-			elt.removeEventListener("touchend", handleTouchEnd);
+			elt.removeEventListener("touchstart", handleTouchStart as EventListener);
+			elt.removeEventListener("touchend", handleTouchEnd as EventListener);
 			if (detectMouseEvents) {
-				elt.removeEventListener("mousedown", handleMouseDown);
-				elt.removeEventListener("mouseup", handleMouseUp);
+				elt.removeEventListener("mousedown", handleMouseDown as EventListener);
+				elt.removeEventListener("mouseup", handleMouseUp as EventListener);
 			}
 		};
 	}, [target, detectMouseEvents, preventDefault, stopPropagation]);
