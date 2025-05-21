@@ -1,113 +1,88 @@
-"use client";
-
+import { Virtuoso } from "react-virtuoso";
 import { useRef, useEffect, type FC } from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { clsx } from "clsx";
 import type { Video } from "./PlayerStateProvider";
-
 import "./video-slider-styles.css";
 
 interface VignetteProps {
-	video: Video;
-	active: boolean;
-	onSelection: (vid: Video) => void;
+    video: Video;
+    active: boolean;
+    onSelection: (vid: Video) => void;
 }
 
 const Vignette: FC<VignetteProps> = ({ video, active, onSelection }) => (
-	<Center
-		key={`${video.id}`}
-		className={clsx("vignette", active && "active")}
-		cursor="pointer"
-		onClick={() => onSelection(video)}
-		padding="2"
-		position="relative"
-		tabIndex={0}
-	>
-		<Image alt={video.title} src={video.thumbnail} width="240" height="180" />
-		<Text position="absolute" color="white" textAlign="center">
-			Ep#{video.id}
-			<br />
-			{video.title}
-		</Text>
-	</Center>
+    <Center
+        key={`${video.id}`}
+        className={clsx("vignette", active && "active")}
+        cursor="pointer"
+        onClick={() => onSelection(video)}
+        padding="2"
+        position="relative"
+        tabIndex={0}
+    >
+        <Image alt={video.title} src={video.thumbnail} width="240" height="180" />
+        <Text position="absolute" color="white" textAlign="center">
+            Ep#{video.id}
+            <br />
+            {video.title}
+        </Text>
+    </Center>
 );
 
 interface VideoSliderProps {
-	videos: Video[];
-	selectedVideo: Video;
-	setSelectedVideo: (vid: Video) => void;
+    videos: Video[];
+    selectedVideo: Video;
+    setSelectedVideo: (vid: Video) => void;
 }
 
 export const VideoSlider: FC<VideoSliderProps> = ({
-	videos,
-	selectedVideo,
-	setSelectedVideo
+    videos,
+    selectedVideo,
+    setSelectedVideo
 }) => {
-	const launcherRef = useRef<HTMLDivElement>(null);
+    const REPEAT = 100; // Repeat the list to simulate infinite wheel
+    const totalVideos = videos.length * REPEAT;
+    const virtuosoRef = useRef<any>(null);
 
-	// Implement infinite scrolling effect for the launcher
-	useEffect(() => {
-		const launcher = launcherRef.current;
-		if (!launcher) return;
+    // Center the scroll on mount
+    useEffect(() => {
+        if (virtuosoRef.current) {
+            const middleIndex = Math.floor(totalVideos / 2);
+            virtuosoRef.current.scrollToIndex({ index: middleIndex, align: "center" });
+        }
+    }, [totalVideos]);
 
-		const handleScroll = () => {
-			const { scrollTop, scrollHeight, clientHeight } = launcher;
+    const getVideo = (index: number) => videos[index % videos.length];
 
-			// If we're at the bottom, jump to the top
-			if (scrollTop + clientHeight >= scrollHeight - 10) {
-				launcher.scrollTop = 1;
-			}
-
-			// If we're at the top, jump to the bottom
-			if (scrollTop <= 0) {
-				launcher.scrollTop = scrollHeight - clientHeight - 1;
-			}
-		};
-
-		launcher.addEventListener("scroll", handleScroll);
-		return () => launcher.removeEventListener("scroll", handleScroll);
-	}, []);
-
-	return (
-		<Box
-			as="nav"
-			height="100vh"
-			bg="brand.800"
-			overflow="hidden"
-			position="relative"
-			zIndex="10"
-		>
-			<Box
-				ref={launcherRef}
-				height="100%"
-				backgroundColor="black"
-				overflowY="scroll"
-				css={{
-					"&::-webkit-scrollbar": {
-						width: "6px"
-					},
-					"&::-webkit-scrollbar-track": {
-						background: "#1A1A1A"
-					},
-					"&::-webkit-scrollbar-thumb": {
-						background: "#333333"
-					},
-					scrollbarWidth: "thin",
-					scrollbarColor: "#333333 #1A1A1A"
-				}}
-				paddingY="2"
-			>
-				{/* Duplicate videos at the beginning and end for infinite scroll effect */}
-				{[...videos, ...videos].map((video, index) => (
-					<Vignette
-						video={video}
-						active={selectedVideo.id === video.id}
-						onSelection={setSelectedVideo}
-						key={`${video.id}-${index}`}
-					/>
-				))}
-			</Box>
-		</Box>
-	);
+    return (
+        <Box
+            as="nav"
+            height="100vh"
+            bg="brand.800"
+            overflow="hidden"
+            position="relative"
+            zIndex="10"
+        >
+            <Virtuoso
+                className="video-slider"
+                ref={virtuosoRef}
+                style={{ height: "100vh", width: "240px", background: "#18181b" }}
+                overscan={{  main: 4, reverse: 4 }}
+                totalCount={totalVideos}
+                initialTopMostItemIndex={Math.floor(totalVideos / 2)}
+                itemContent={(index: number) => {
+                    const video = getVideo(index);
+                    return (
+                        <Vignette
+                            video={video}
+                            active={selectedVideo.id === video.id}
+                            onSelection={setSelectedVideo}
+                        />
+                    );
+                }}
+            />
+        </Box>
+    );
 };

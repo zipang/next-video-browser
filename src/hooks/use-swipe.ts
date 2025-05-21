@@ -58,16 +58,15 @@ const inferDirection = ([x, y]: Vector) => {
  * Detect a touch or swipe event
  * @param opts.onSwipe Callback for swipe events
  */
-export const useSwipe = (opts: UseSwipeOptions) => {
-	const {
-		target,
-		detectMouseEvents = false,
-		preventDefault = false,
-		stopPropagation = false,
-		threshold = 25,
-		onSwipe,
-		onTap
-	} = opts;
+export const useSwipe = ({
+	target,
+	detectMouseEvents = false,
+	preventDefault = false,
+	stopPropagation = false,
+	threshold = 25,
+	onSwipe,
+	onTap
+}: UseSwipeOptions) => {
 	const [startPoint, setStartPoint] = useState<Touch | MouseEvent | null>(null);
 	const [endPoint, setEndPoint] = useState<Touch | MouseEvent | null>(null);
 

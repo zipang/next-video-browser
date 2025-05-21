@@ -11,6 +11,7 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-recycled-list": "^1.0.7",
+        "react-virtuoso": "^4.12.7",
         "valibot": "^1.1.0",
       },
       "devDependencies": {
@@ -427,6 +428,8 @@
     "react-recycled-list": ["react-recycled-list@1.0.7", "", { "dependencies": { "react-resize-detector": "^6.7.0" }, "peerDependencies": { "react": ">=16", "react-dom": ">=16" } }, "sha512-Ce+DNS31Uf7BJ6rZyLIujQrIKeYXAT44Oax7zAcy8bRP+zuCN+CTezvyJn9jpD9fHxqLZb6raQJMIAlm0iWmjQ=="],
 
     "react-resize-detector": ["react-resize-detector@6.7.8", "", { "dependencies": { "@types/resize-observer-browser": "^0.1.6", "lodash": "^4.17.21", "resize-observer-polyfill": "^1.5.1" }, "peerDependencies": { "react": "^16.0.0 || ^17.0.0", "react-dom": "^16.0.0 || ^17.0.0" } }, "sha512-0FaEcUBAbn+pq3PT5a9hHRebUfuS1SRLGLpIw8LydU7zX429I6XJgKerKAMPsJH0qWAl6o5bVKNqFJqr6tGPYw=="],
+
+    "react-virtuoso": ["react-virtuoso@4.12.7", "", { "peerDependencies": { "react": ">=16 || >=17 || >= 18 || >= 19", "react-dom": ">=16 || >=17 || >= 18 || >=19" } }, "sha512-njJp764he6Fi1p89PUW0k2kbyWu9w/y+MwdxmwK2kvdwwzVDbz2c2wMj5xdSruBFVgFTsI7Z85hxZR7aSHBrbQ=="],
 
     "resize-observer-polyfill": ["resize-observer-polyfill@1.5.1", "", {}, "sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg=="],
 
