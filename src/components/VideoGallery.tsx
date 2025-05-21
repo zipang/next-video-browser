@@ -9,7 +9,8 @@ import {
 	VStack,
 	HStack,
 	Grid,
-	GridItem
+	GridItem,
+	useSafeLayoutEffect
 } from "@chakra-ui/react";
 import { useDisclosure } from "@hooks/use-disclosure";
 import { DownloadIcon } from "@icons/download-icon";
@@ -25,8 +26,15 @@ export interface VideoGalleryProps {
 export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 	const [selectedVideo, setSelectedVideo] = useState(videos[0]);
 	const [isPanelOpen, toggleDrawer, openDrawer, closeDrawer] = useDisclosure({
-		defaultOpen: true
+		defaultOpen: false
 	});
+
+	useSafeLayoutEffect(() => {
+		/**
+		 * Open the drawer after a short delay to allow for smooth transitions.
+		 */
+		setTimeout(() => openDrawer(), 1000);
+	}, []);
 
 	return (
 		<main>
