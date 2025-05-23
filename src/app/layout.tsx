@@ -15,7 +15,6 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => (
 		<body>
 			<ChakraProvider value={theme}>
 				<EventBusProvider>{children}</EventBusProvider>
-				{children}
 			</ChakraProvider>
 		</body>
 	</html>
