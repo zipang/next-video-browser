@@ -1,5 +1,6 @@
 import type { FC, PropsWithChildren } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { EventBusProvider } from "@components/EventBusProvider";
 import { theme } from "./theme";
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => (
@@ -12,7 +13,10 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => (
 			<link rel="icon" href="/movie-icon.svg" />
 		</head>
 		<body>
-			<ChakraProvider value={theme}>{children}</ChakraProvider>
+			<ChakraProvider value={theme}>
+				<EventBusProvider>{children}</EventBusProvider>
+				{children}
+			</ChakraProvider>
 		</body>
 	</html>
 );

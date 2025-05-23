@@ -28,6 +28,10 @@
 				/* Sometimes if we do not use the semantic element (like button) it's for a reason.. (rendering) */
 				"useSemanticElements": "info"
 			},
+			"complexity": {
+				/** Disable no forEach */
+				"noForEach": "off"
+			},
 			"correctness": {
 				/* Usage of `key` is specific to React */
 				"useJsxKeyInIterable": "off"
