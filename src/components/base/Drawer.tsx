@@ -1,25 +1,27 @@
-import {
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	type FC,
-	type MouseEventHandler,
-	type ReactNode
-} from "react";
-import { Box, Button, Center, Portal, useSafeLayoutEffect } from "@chakra-ui/react";
+import { useRef, type FC, type MouseEventHandler, type ReactNode } from "react";
+import { Box, Button, Center, useSafeLayoutEffect } from "@chakra-ui/react";
 import clsx from "clsx";
 import {
-	AnimatableObject,
+	type AnimatableObject,
+	type Scope,
 	createAnimatable,
 	createDraggable,
-	createScope,
-	Scope
+	createScope
 } from "animejs";
-import { useSwipe } from "@hooks/use-swipe";
 
 import "./drawer-styles.css";
 
 export type DrawerPlacement = "left" | "right";
+const drawerPositions = {
+	left: {
+		open: 0,
+		close: -240
+	},
+	right: {
+		open: 240,
+		close: 0
+	}
+};
 
 export interface DrawerStateProps {
 	isOpen: boolean;
