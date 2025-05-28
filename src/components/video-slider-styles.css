@@ -1,6 +1,16 @@
 .vignette {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    /* Center content */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     width: 240;
     height: auto;
+    padding: 10px;
+    background-color: black;
 
     &:focus {
         background-color: rgba(255, 255, 255, 0.5);
@@ -9,6 +19,12 @@
 
     &.active {
         background-color: white;
+    }
+
+    >p {
+        position: absolute;
+        color: white;
+        text-align: center;
     }
 
     >img {
