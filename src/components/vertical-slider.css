@@ -1,0 +1,15 @@
+.vertical-slider {
+    position: relative;
+    will-change: transform;
+
+    >.slide-container {
+        position: absolute;
+        width: 100%;
+        overflow: hidden;
+        /* Center content */
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+}
