@@ -40,6 +40,7 @@ const videoSchema = v.object({
 	duration: v.string(),
 	description: v.string(),
 	thumbnail: v.string(),
+	height: v.number(),
 	src: v.pipe(v.string(), v.url()),
 	resources: v.array(resourceSchema)
 });
