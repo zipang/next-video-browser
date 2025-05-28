@@ -23,9 +23,13 @@ export interface Video {
 	 */
 	description: string;
 	/**
-	 * Thumbnail (vignette) of tyhe video used to select and launch it
+	 * Thumbnail (vignette) of the video used to select and launch it
 	 */
 	thumbnail: string;
+	/**
+	 * Height of the Vignette
+	 */
+	height: number;
 	/**
 	 * URL of the video
 	 */
