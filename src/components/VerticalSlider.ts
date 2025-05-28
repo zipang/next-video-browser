@@ -151,7 +151,7 @@ export class VerticalSlider {
 				// and put them in last position under the viewport
 				const firstSlide = slides.getFirstItem();
 
-				if (firstSlide.top + sliderOffset < -100) {
+				if (firstSlide.top + sliderOffset < -1.1 * firstSlide.height) {
 					// Move the first slide after the last slide
 					const lastSlide = slides.getLastItem();
 					firstSlide.top = lastSlide.top + lastSlide.height;
