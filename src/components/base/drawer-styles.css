@@ -1,195 +1,107 @@
 :root {
-	--drawer-overlay-background: rgba(0, 0, 0, 0.4);
-	--drawer-transition-duration: 0.8s;
-	--drawer-z-index: 1000;
-	--drawer-handler-size: 40px;
+    --drawer-overlay-background: rgba(0, 0, 0, 0.4);
+    --drawer-transition-duration: 0.4s;
+    --drawer-z-index: 1000;
+    --drawer-handler-size: 40px;
 }
 
 .drawer-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: var(--drawer-overlay-background);
-	opacity: 0;
-	visibility: hidden;
-	transition: opacity var(--drawer-transition-duration) ease-in-out, visibility 0s
-		var(--drawer-transition-duration) linear;
-	z-index: var(--drawer-z-index);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--drawer-overlay-background);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--drawer-transition-duration) ease-in-out, visibility 0s var(--drawer-transition-duration) linear;
+    z-index: var(--drawer-z-index);
 }
 
 .drawer-overlay--open {
-	opacity: 1;
-	visibility: visible;
-	transition-delay: 0s; /* Ensure visibility transition applies immediately on open */
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+    /* Ensure visibility transition applies immediately on open */
 }
 
 .drawer-content {
-	position: fixed;
-	display: flex; /* Helps with child layout if needed */
-	height: 100vh;
-	overflow: hidden; /* Allows content within the drawer to scroll */
-	z-index: calc(var(--drawer-z-index) + 1);
-	transition: transform var(--drawer-transition-duration) ease-in-out;
-	transition: transform var(--drawer-transition-duration)
-		linear(
-			0.0,
-			-0.0104,
-			0.0042,
-			0.0458,
-			0.11,
-			0.192,
-			0.286,
-			0.39,
-			0.497,
-			0.606,
-			0.711,
-			0.812,
-			0.904,
-			0.988,
-			1.06,
-			1.12,
-			1.17,
-			1.21,
-			1.24,
-			1.26,
-			1.26,
-			1.26,
-			1.25,
-			1.24,
-			1.22,
-			1.19,
-			1.17,
-			1.14,
-			1.11,
-			1.08,
-			1.06,
-			1.03,
-			1.01,
-			0.99,
-			0.973,
-			0.959,
-			0.948,
-			0.94,
-			0.934,
-			0.932,
-			0.931,
-			0.933,
-			0.937,
-			0.941,
-			0.947,
-			0.954,
-			0.961,
-			0.969,
-			0.976,
-			0.983,
-			0.99,
-			0.996,
-			1.0,
-			1.01,
-			1.01,
-			1.01,
-			1.02,
-			1.02,
-			1.02,
-			1.02,
-			1.02,
-			1.02,
-			1.02,
-			1.01,
-			1.01,
-			1.01,
-			1.01,
-			1.01,
-			1.0,
-			1.0,
-			1.0,
-			1.0,
-			0.999,
-			0.998,
-			0.997,
-			0.996,
-			0.996,
-			0.995,
-			0.995,
-			0.995,
-			0.996,
-			0.996,
-			0.996,
-			0.997,
-			0.997,
-			0.998,
-			0.998,
-			0.999,
-			0.999,
-			1.0
-		);
+    position: fixed;
+    display: flex;
+    /* Helps with child layout if needed */
+    height: 100vh;
+    overflow: hidden;
+    /* Allows content within the drawer to scroll */
+    z-index: calc(var(--drawer-z-index) + 1);
+}
+
+.drawer-content.dragging {
+    /* Disable transition while dragging */
+    transition: none;
 }
 
 /* Placement specific styles */
 .drawer-content.left {
-	top: 0;
-	left: 0;
-	transform: translateX(calc(-100% + var(--drawer-handler-size)));
-	padding-right: var(--drawer-handler-size);
-}
-.drawer-content.left.open {
-	transform: translateX(0);
+    top: 0;
+    left: 0;
+    /* hidden position */
+    transform: translate3d(0, 0, 0);
+    padding-right: var(--drawer-handler-size);
 }
 
 .drawer-content.right {
-	top: 0;
-	right: 0;
-	padding-left: var(--drawer-handler-size);
-	transform: translateX(calc(100% - var(--drawer-handler-size)));
+    top: 0;
+    right: 0;
+    padding-left: var(--drawer-handler-size);
+    transform: translateX(calc(100% - var(--drawer-handler-size)));
 }
+
 .drawer-content.right.open {
-	transform: translateX(0);
+    transform: translateX(0);
 }
 
 /* Swipe handler (container + button) */
 .swipe-handler {
-	touch-action: pan-y;
-	cursor: grab;
-	position: absolute;
+    touch-action: pan-y;
+    cursor: grab;
+    position: absolute;
 }
 
-.swipe-handler.swipe-handler--left {
-	top: 0;
-	bottom: 0;
-	right: 0;
-	width: var(--drawer-handler-size);
+.swipe-handler.left {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--drawer-handler-size);
 
-	button {
-		transform: translateY(-50%);
-	}
+    button {
+        transform: translateY(-50%);
+    }
 
-	.swipe-handler--icon {
-		transition: transform var(--drawer-transition-duration) ease-in-out;
-	}
+    .swipe-handler--icon {
+        transition: transform var(--drawer-transition-duration) ease-out;
+    }
 
-	&.swipe-handler--open .swipe-handler--icon {
-		transform: rotate(180deg);
-	}
+    &.open .swipe-handler--icon {
+        transform: rotate(180deg);
+    }
 }
 
-.swipe-handler.swipe-handler--right {
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: var(--drawer-handler-size);
+.swipe-handler.right {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--drawer-handler-size);
 
-	button {
-		transform: translateY(-50%);
-	}
+    button {
+        transform: translateY(-50%);
+    }
 
-	.swipe-handler--icon {
-		transition: transform var(--drawer-transition-duration) ease-in-out;
-		transform: rotate(180deg);
-	}
+    .swipe-handler--icon {
+        transition: transform var(--drawer-transition-duration) ease-in-out;
+        transform: rotate(180deg);
+    }
 
-	&.swipe-handler--open .swipe-handler--icon {
-		transform: rotate(0);
-	}
+    &.open .swipe-handler--icon {
+        transform: rotate(0);
+    }
 }

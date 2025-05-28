@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, type FC, type PropsWithChildren } from "react";
 
 type TCallback = () => void;
