@@ -5,24 +5,29 @@ interface ListenerOptions {
 	/**
 	 * Callback for swipe events
 	 */
-	onSwipe?: (direction: Direction, vector: Vector, duration: number) => void;
+	onSwipe?: (
+		direction: Direction,
+		vector: Vector,
+		duration: number,
+		evt: Event
+	) => void;
 	/**
 	 * Callback for drag events
 	 * This is called when the user drags their finger on the screen
 	 * and the swipe is not completed (i.e. the user has not lifted their finger yet).
 	 * @param deplacement Since the last onDrag event, this is the vector of the movement
 	 */
-	onDrag?: (deplacement: Vector) => void;
+	onDrag?: (deplacement: Vector, evt: Event) => void;
 	/**
 	 * Callback for the last drag event
 	 * @param deplacement Since the last onDrag event, this is the vector of the movement
 	 * @param speed The speed (in pixels per second) at which the drag was released.
 	 */
-	onDragEnd?: (deplacement: Vector, speed: number) => void;
+	onDragEnd?: (deplacement: Vector, speed: number, evt: Event) => void;
 	/**
 	 * Callback for tap events
 	 */
-	onTap?: (origin: Vector) => void;
+	onTap?: (origin: Vector, evt: Event) => void;
 	/**
 	 * A specific DOM element to attach the touch event
 	 * @default window
@@ -33,15 +38,6 @@ interface ListenerOptions {
 	 * @default false
 	 */
 	detectMouseEvents?: boolean;
-	/**
-	 * Prevent default (will prevent a click event to occur)
-	 * @default false
-	 */
-	preventDefault?: boolean;
-	/**
-	 * Stop propagation to further layers
-	 */
-	stopPropagation?: boolean;
 	/**
 	 * Number of pixel before the event is considered a swipe
 	 * (under that number it's a 'tap')
@@ -81,8 +77,6 @@ export class TouchEventListener {
 
 	private threshold: number;
 	private swapYAxis = false; // Swap Y axis for touch events
-	private stopPropagation = false;
-	private preventDefault = false;
 
 	private startTime: number | null = null;
 	private endTime: number | null = null;
@@ -96,17 +90,17 @@ export class TouchEventListener {
 	 */
 
 	private onSwipe:
-		| ((dir: Direction, vector: Vector, duration: number) => void)
+		| ((dir: Direction, vector: Vector, duration: number, evt: Event) => void)
 		| undefined;
-	private onDrag: ((deplacement: Vector) => void) | undefined;
-	private onDragEnd: ((deplacement: Vector, speed: number) => void) | undefined;
-	private onTap: ((origin: Vector) => void) | undefined;
+	private onDrag: ((deplacement: Vector, evt: Event) => void) | undefined;
+	private onDragEnd:
+		| ((deplacement: Vector, speed: number, evt: Event) => void)
+		| undefined;
+	private onTap: ((origin: Vector, evt: Event) => void) | undefined;
 
 	constructor({
 		target = window,
 		detectMouseEvents = false,
-		preventDefault = false,
-		stopPropagation = false,
 		threshold = 25,
 		onSwipe,
 		onDrag,
@@ -115,34 +109,21 @@ export class TouchEventListener {
 	}: ListenerOptions) {
 		this.target = target;
 		this.threshold = threshold;
-		this.preventDefault = preventDefault;
-		this.stopPropagation = stopPropagation;
 
 		this.onSwipe = onSwipe;
 		this.onDrag = onDrag;
 		this.onDragEnd = onDragEnd;
 		this.onTap = onTap;
 
-		target.addEventListener("touchstart", this.handleTouchStart, {
-			passive: !preventDefault
-		});
-		target.addEventListener("touchend", this.handleTouchEnd, {
-			passive: !preventDefault
-		});
+		target.addEventListener("touchstart", this.handleTouchStart);
+		target.addEventListener("touchend", this.handleTouchEnd);
 
 		// Don't register touchmove if onDrag callback is not defined
-		if (this.onDrag)
-			target.addEventListener("touchmove", this.handleTouchMove, {
-				passive: !preventDefault
-			});
+		if (this.onDrag) target.addEventListener("touchmove", this.handleTouchMove);
 
 		if (detectMouseEvents) {
-			target.addEventListener("mousedown", this.handleMouseDown, {
-				passive: !preventDefault
-			});
-			target.addEventListener("mouseup", this.handleMouseUp, {
-				passive: !preventDefault
-			});
+			target.addEventListener("mousedown", this.handleMouseDown);
+			target.addEventListener("mouseup", this.handleMouseUp);
 		}
 	}
 
@@ -196,15 +177,8 @@ export class TouchEventListener {
 		}
 
 		// Calculate the deplacement since the last point
-		this.onDrag?.(getDirectionVector(this.lastPos, newPos));
+		this.onDrag?.(getDirectionVector(this.lastPos, newPos), evt);
 		this.lastPos = newPos;
-
-		if (this.preventDefault) {
-			evt.preventDefault();
-		}
-		if (this.stopPropagation) {
-			evt.stopPropagation();
-		}
 	};
 
 	handleMouseMove: EventListener = (evt) => {
@@ -214,7 +188,7 @@ export class TouchEventListener {
 			this.lastPos = this.startPos || newPos;
 		}
 		// Calculate the deplacement since the last point
-		this.onDrag?.(getDirectionVector(this.lastPos, newPos));
+		this.onDrag?.(getDirectionVector(this.lastPos, newPos), evt);
 		this.lastPos = newPos;
 	};
 
@@ -225,20 +199,13 @@ export class TouchEventListener {
 
 		this.endPos = this.getTouchPosition(evt as TouchEvent);
 
-		if (this.preventDefault) {
-			evt.preventDefault();
-		}
-		if (this.stopPropagation) {
-			evt.stopPropagation();
-		}
-
 		// Signal onDragEnd if a callback is registered
 		if (this.onDragEnd && this.lastPos) {
 			// Calculate the speed
 			const deplacement = getDirectionVector(this.lastPos, this.endPos);
 			// @ts-expect-error We know the endTime has been registered
 			const releaseSpeed = (norm(deplacement) * 1000) / (now - this.endTime);
-			this.onDragEnd(deplacement, releaseSpeed);
+			this.onDragEnd(deplacement, releaseSpeed, evt);
 		}
 
 		// Signal final deplacement
@@ -247,9 +214,9 @@ export class TouchEventListener {
 
 			if (norm(vector) > this.threshold) {
 				const direction = getMainDirection(vector);
-				this.onSwipe(direction, vector, fullDuration);
+				this.onSwipe(direction, vector, fullDuration, evt);
 			} else if (this.onTap && fullDuration < 250) {
-				this.onTap(this.startPos);
+				this.onTap(this.startPos, evt);
 			}
 		}
 
@@ -268,16 +235,17 @@ export class TouchEventListener {
 
 		this.endPos = this.getMousePosition(evt as MouseEvent);
 
-		if (this.preventDefault) {
-			evt.preventDefault();
-		}
-		if (this.stopPropagation) {
-			evt.stopPropagation();
-		}
-
 		// Signal onDragEnd if a callback is registered
 		if (this.onDragEnd && this.lastPos) {
-			this.onDragEnd(getDirectionVector(this.lastPos, this.endPos));
+			// Calculate the speed
+			const deplacement = getDirectionVector(this.lastPos, this.endPos);
+			// @ts-expect-error We know the endTime has been registered
+			const releaseSpeed = (norm(deplacement) * 1000) / (now - this.endTime);
+			this.onDragEnd(
+				getDirectionVector(this.lastPos, this.endPos),
+				releaseSpeed,
+				evt
+			);
 		}
 
 		// Signal final deplacement
@@ -286,9 +254,9 @@ export class TouchEventListener {
 
 			if (norm(vector) > this.threshold) {
 				const direction = getMainDirection(vector);
-				this.onSwipe(direction, vector, duration);
+				this.onSwipe(direction, vector, duration, evt);
 			} else if (this.onTap && duration < 250) {
-				this.onTap(this.startPos);
+				this.onTap(this.startPos, evt);
 			}
 		}
 
