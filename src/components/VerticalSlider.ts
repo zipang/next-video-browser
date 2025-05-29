@@ -105,19 +105,24 @@ export class VerticalSlider {
 
 		new TouchEventListener({
 			target: this.touchLayer,
-			stopPropagation: true,
-			onDrag: ([movX, movY]) => {
+
+			onDrag: ([movX, movY], evt) => {
 				if (this.isAnimating) {
 					this.stop();
 				}
+				evt.preventDefault();
+				evt.stopPropagation();
 				// Translate the slider with the movement vector
 				this.sliderOffset += movY;
 				this.slider.style.transform = `translateY(${this.sliderOffset}px)`;
 			},
-			onDragEnd: ([movX, movY]) => {
-				if (movY > 10 || movY < -10) {
+			onDragEnd: ([movX, movY], speed, evt) => {
+				evt.preventDefault();
+				evt.stopPropagation();
+
+				if (speed > 10) {
 					// If the movement is significant, animate the slider
-					this.animate(movY * 11);
+					this.animate(movY * speed);
 				}
 			}
 		});
