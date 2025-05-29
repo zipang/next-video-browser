@@ -57,6 +57,29 @@ export class CircularList<T> {
 	}
 
 	/**
+	 * Find an item in the list based on a predicate function.
+	 */
+	find(getItem: (item: T, index: number) => boolean): T | undefined {
+		for (let i = 0; i < this._length; i++) {
+			const item = this._items[i];
+			if (getItem(item, i)) {
+				return item;
+			}
+		}
+		return undefined;
+	}
+
+	/**
+	 * Call the given function for each item in the list.
+	 * @param cb Callback function to call for each item.
+	 */
+	forEach(cb: (item: T, index: number) => void): void {
+		for (let i = 0; i < this._length; i++) {
+			cb(this._items[i], i);
+		}
+	}
+
+	/**
 	 * Take the first item and then move it to the end of the list
 	 */
 	popFirst() {
