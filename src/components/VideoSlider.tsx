@@ -13,12 +13,7 @@ interface VignetteProps {
 }
 
 const Vignette: FC<VignetteProps> = ({ video, skeleton = false }) => (
-	<div
-		key={`${video.id}`}
-		className={`vignette video-${video.id}`}
-		data-video-index={video.id}
-		tabIndex={0}
-	>
+	<div key={`${video.id}`} className={`vignette video-${video.id}`} tabIndex={0}>
 		{!skeleton && (
 			<Image
 				alt={video.title}
@@ -45,30 +40,6 @@ export const VideoSlider: FC<VideoSliderProps> = ({ videos, setSelectedVideo }) 
 	const target = useRef<HTMLDivElement>(null);
 	const slider = useRef<VerticalSlider>(null);
 
-	const handleMouseWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-		slider.current?.animate(-event.deltaY * 11);
-	};
-
-	const handleSelectVideo = (event: React.MouseEvent<HTMLDivElement>) => {
-		slider.current?.stop();
-		// Find the closest vignette element to the clicked target
-		const targetElement = event.target as HTMLElement;
-		const vignetteElement = targetElement.closest(".vignette");
-		const videoIndex = Number.parseInt(
-			vignetteElement?.getAttribute("data-video-index") || "",
-			10
-		);
-		if (vignetteElement && !Number.isNaN(videoIndex)) {
-			const video = videos[videoIndex - 1]; // Adjust for 0-based index
-			setSelectedVideo(video);
-			document.querySelectorAll(".vignette").forEach((el) => {
-				el.classList.remove("active");
-			});
-			vignetteElement.classList.add("active");
-			console.log("Selected video:", video.title);
-		}
-	};
-
 	// Initialize the slider when the component mounts
 	useSafeLayoutEffect(() => {
 		slider.current = new VerticalSlider({
@@ -80,13 +51,17 @@ export const VideoSlider: FC<VideoSliderProps> = ({ videos, setSelectedVideo }) 
 				const video = videos[index % videos.length];
 				return {
 					render: (parent: HTMLElement) => {
-						const root = createRoot(parent);
-						root.render(<Vignette video={video} />);
-						console.log("slide.render() called for video:", video.title);
+						createRoot(parent).render(<Vignette video={video} />);
 					},
+
 					width: 240,
 					height: video.height
 				};
+			},
+			onSlideSelect: (index) => {
+				const video = videos[index];
+				setSelectedVideo(video);
+				return "active";
 			}
 		});
 	}, []);
@@ -94,15 +69,14 @@ export const VideoSlider: FC<VideoSliderProps> = ({ videos, setSelectedVideo }) 
 	return (
 		<Box
 			as="nav"
+			className="videos"
 			height="100vh"
+			width="240px"
 			backgroundColor="#18181b"
 			overflow="hidden"
 			position="relative"
 			zIndex="10"
-			onWheel={handleMouseWheel}
-			onClick={handleSelectVideo}
-		>
-			<div className="video-slider" ref={target} />
-		</Box>
+			ref={target}
+		/>
 	);
 };
