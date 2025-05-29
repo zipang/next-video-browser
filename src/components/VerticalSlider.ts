@@ -29,6 +29,11 @@ export interface VSliderOptions {
 	 * @default 0.9
 	 */
 	damping?: number;
+	/**
+	 * Callback on slide selection
+	 * @returns a string that will be used as the selected class name
+	 */
+	onSlideSelect?: (index: number) => string;
 }
 
 export class VerticalSlider {
@@ -42,19 +47,67 @@ export class VerticalSlider {
 	slides: CircularList<ElementWrapper>;
 	slider: HTMLDivElement;
 	sliderOffset = 0; // Initial offset
+	touchLayer: HTMLDivElement;
 	viewportHeight: number;
+	onSlideSelect: (index: number) => string;
 
 	// Store the options
-	constructor({ target, getSlide, width = 240, damping = 0.9, count }: VSliderOptions) {
+	constructor({
+		target,
+		getSlide,
+		onSlideSelect,
+		width = 240,
+		damping = 0.9,
+		count
+	}: VSliderOptions) {
 		this.getSlide = getSlide;
+		this.onSlideSelect = onSlideSelect || (() => "active");
 		this.count = count;
 
 		this.damping = damping;
 
+		// We need to add another layer to capture the mouse wheel and touch events
+		this.touchLayer = document.createElement("div");
+		this.touchLayer.className = "vertical-slider__touch-layer";
+		this.touchLayer.style.width = `${width}px`;
+
+		this.touchLayer.addEventListener("wheel", (event) => {
+			event.preventDefault();
+			this.animate(-event.deltaY * 11);
+		});
+
+		this.touchLayer.addEventListener("click", (event) => {
+			// Stop the animation if it is running
+			this.stop();
+			// Find the closest slide element to the clicked target
+			const targetElement = event.target as HTMLElement;
+			const slideElement = targetElement.closest(".slide-container");
+			const selectedSlide = this.slides.find(
+				({ element }) => element === slideElement
+			);
+			const index = selectedSlide?.getData("index");
+
+			if (this.onSlideSelect && index !== undefined) {
+				const className = this.onSlideSelect(index);
+				if (className) {
+					// Remove the active class from all slides
+					this.slides.forEach((slide) => {
+						slide.element.classList.remove(className);
+						// Add the active class to the selected slides with the same index
+						if (slide.getData("index") === index) {
+							slide.element?.classList.add(className);
+						}
+					});
+				}
+			}
+		});
+		target.appendChild(this.touchLayer);
+
+		this.slider = document.createElement("div");
 		// This className brings most of the CSS styles
-		this.slider = target;
 		this.slider.className = "vertical-slider";
 		this.slider.style.width = `${width}px`;
+		this.touchLayer.appendChild(this.slider);
 
 		// Reserve a fixed array for the slides that is enough to fill the viewport
 		this.viewportHeight = window.screen.height;
@@ -82,10 +135,10 @@ export class VerticalSlider {
 
 			const { height, render } = getSlide(index % count);
 			slideWrapper.height = height;
-			slidePos = slidePos + height;
 			slideWrapper.top = slidePos;
+			slidePos = slidePos + height;
 			slideWrapper.swapChild(render);
-			slideWrapper.setData("index", index);
+			slideWrapper.setData("index", index % count);
 
 			return slideWrapper.appendTo(this.slider);
 		});
