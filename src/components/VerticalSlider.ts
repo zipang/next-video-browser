@@ -1,3 +1,4 @@
+import { TouchEventListener } from "src/utils/TouchEventsListener";
 import { CircularList } from "./CircularList";
 import { ElementWrapper } from "./ElementWrapper";
 
@@ -101,6 +102,25 @@ export class VerticalSlider {
 				}
 			}
 		});
+
+		new TouchEventListener({
+			target: this.touchLayer,
+			onDrag: ([movX, movY]) => {
+				if (this.isAnimating) {
+					this.stop();
+				}
+				// Translate the slider with the movement vector
+				this.sliderOffset += movY;
+				this.slider.style.transform = `translateY(${this.sliderOffset}px)`;
+			},
+			onDragEnd: ([movX, movY]) => {
+				if (movY > 10 || movY < -10) {
+					// If the movement is significant, animate the slider
+					this.animate(movY * 11);
+				}
+			}
+		});
+
 		target.appendChild(this.touchLayer);
 
 		this.slider = document.createElement("div");

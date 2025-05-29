@@ -42,7 +42,7 @@ export class ElementWrapper {
 	/**
 	 * Create a new ElementWrapper instance.
 	 * You can either create a new element from a string representation
-	 * or select an existing element from the DOM.
+	 * or wrap an existing element from the DOM.
 	 * @param element A CSS selector representing the element to create or select, or an existing HTMLElement.
 	 * @param mode
 	 */
@@ -95,6 +95,20 @@ export class ElementWrapper {
 	}
 	set height(value: number) {
 		this._element.style.height = `${value}px`;
+	}
+
+	get backgroundColor(): string {
+		return this._element.style.backgroundColor;
+	}
+	set backgroundColor(value: string) {
+		this._element.style.backgroundColor = value;
+	}
+
+	get tabIndex(): number {
+		return this._element.tabIndex;
+	}
+	set tabIndex(value: number) {
+		this._element.tabIndex = value;
 	}
 
 	get className(): string {
