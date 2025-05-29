@@ -16,8 +16,9 @@ interface ListenerOptions {
 	/**
 	 * Callback for the last drag event
 	 * @param deplacement Since the last onDrag event, this is the vector of the movement
+	 * @param speed The speed (in pixels per second) at which the drag was released.
 	 */
-	onDragEnd?: (deplacement: Vector) => void;
+	onDragEnd?: (deplacement: Vector, speed: number) => void;
 	/**
 	 * Callback for tap events
 	 */
@@ -90,8 +91,6 @@ export class TouchEventListener {
 	private endPos: Vector | null = null;
 	private lastPos: Vector | null = null;
 
-	private isDragging = false;
-
 	/**
 	 * Callbacks
 	 */
@@ -100,7 +99,7 @@ export class TouchEventListener {
 		| ((dir: Direction, vector: Vector, duration: number) => void)
 		| undefined;
 	private onDrag: ((deplacement: Vector) => void) | undefined;
-	private onDragEnd: ((deplacement: Vector) => void) | undefined;
+	private onDragEnd: ((deplacement: Vector, speed: number) => void) | undefined;
 	private onTap: ((origin: Vector) => void) | undefined;
 
 	constructor({
@@ -171,7 +170,6 @@ export class TouchEventListener {
 		this.startPos = null;
 		this.endPos = null;
 		this.lastPos = null;
-		this.isDragging = false;
 	}
 
 	handleTouchStart: EventListener = (evt) => {
@@ -189,8 +187,7 @@ export class TouchEventListener {
 	};
 
 	handleTouchMove: EventListener = (evt) => {
-		this.isDragging = true;
-
+		this.endTime = Date.now();
 		const newPos = this.getTouchPosition(evt as TouchEvent);
 
 		if (!this.lastPos) {
@@ -201,10 +198,16 @@ export class TouchEventListener {
 		// Calculate the deplacement since the last point
 		this.onDrag?.(getDirectionVector(this.lastPos, newPos));
 		this.lastPos = newPos;
+
+		if (this.preventDefault) {
+			evt.preventDefault();
+		}
+		if (this.stopPropagation) {
+			evt.stopPropagation();
+		}
 	};
 
 	handleMouseMove: EventListener = (evt) => {
-		this.isDragging = true;
 		const newPos = this.getMousePosition(evt as MouseEvent);
 		if (!this.lastPos) {
 			// If this is the first move, set the last position to the start point
@@ -216,9 +219,9 @@ export class TouchEventListener {
 	};
 
 	handleTouchEnd: EventListener = (evt) => {
-		this.endTime = Date.now();
+		const now = Date.now();
 		// @ts-expect-error We know the startTime has been registered
-		const duration = this.endTime - this.startTime;
+		const fullDuration = now - this.startTime;
 
 		this.endPos = this.getTouchPosition(evt as TouchEvent);
 
@@ -231,7 +234,11 @@ export class TouchEventListener {
 
 		// Signal onDragEnd if a callback is registered
 		if (this.onDragEnd && this.lastPos) {
-			this.onDragEnd(getDirectionVector(this.lastPos, this.endPos));
+			// Calculate the speed
+			const deplacement = getDirectionVector(this.lastPos, this.endPos);
+			// @ts-expect-error We know the endTime has been registered
+			const releaseSpeed = (norm(deplacement) * 1000) / (now - this.endTime);
+			this.onDragEnd(deplacement, releaseSpeed);
 		}
 
 		// Signal final deplacement
@@ -240,8 +247,8 @@ export class TouchEventListener {
 
 			if (norm(vector) > this.threshold) {
 				const direction = getMainDirection(vector);
-				this.onSwipe(direction, vector, duration);
-			} else if (this.onTap && duration < 250) {
+				this.onSwipe(direction, vector, fullDuration);
+			} else if (this.onTap && fullDuration < 250) {
 				this.onTap(this.startPos);
 			}
 		}

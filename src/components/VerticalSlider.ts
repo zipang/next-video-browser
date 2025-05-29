@@ -105,6 +105,7 @@ export class VerticalSlider {
 
 		new TouchEventListener({
 			target: this.touchLayer,
+			stopPropagation: true,
 			onDrag: ([movX, movY]) => {
 				if (this.isAnimating) {
 					this.stop();
