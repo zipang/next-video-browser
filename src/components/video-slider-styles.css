@@ -1,47 +1,47 @@
 .vignette {
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    /* Center content */
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+	position: relative;
+	cursor: pointer;
+	display: flex;
+	/* Center content */
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 
-    width: 240;
-    height: auto;
-    padding: 10px;
-    background-color: black;
+	width: 240;
+	height: auto;
+	padding: 10px;
+	background-color: black;
 
-    &:focus {
-        background-color: rgba(255, 255, 255, 0.5);
-        outline: none;
-    }
+	&:focus {
+		background-color: rgba(255, 255, 255, 0.5);
+		outline: none;
+	}
 
-    >p {
-        position: absolute;
-        color: white;
-        text-align: center;
-    }
+	> p {
+		position: absolute;
+		color: white;
+		text-align: center;
+	}
 
-    >img {
-        transition: all 0.3s ease-in-out;
-        filter: grayscale(100%);
-        opacity: 0.7;
-    }
+	> img {
+		transition: all 0.3s ease-in-out;
+		filter: grayscale(100%);
+		opacity: 0.7;
+	}
 
-    &:hover>img {
-        filter: grayscale(0%);
-        opacity: 0.9;
-    }
+	&:hover > img {
+		filter: grayscale(0%);
+		opacity: 0.9;
+	}
 }
 
 .slide-container.active {
-    .vignette {
-        background-color: white;
-    }
+	.vignette {
+		background-color: white;
+	}
 
-    img {
-        filter: grayscale(0%);
-        opacity: 0.9;
-    }
+	img {
+		filter: grayscale(0%);
+		opacity: 0.9;
+	}
 }

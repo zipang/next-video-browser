@@ -8,9 +8,9 @@ import videosJson from "./videos.json";
 const videos = validateVideos(videosJson);
 
 const HomePage = () => (
-    <PlayerStateProvider playlist={videos}>
-        <VideoGallery videos={videos} />
-    </PlayerStateProvider>
+	<PlayerStateProvider playlist={videos}>
+		<VideoGallery videos={videos} />
+	</PlayerStateProvider>
 );
 
 export default HomePage;
