@@ -107,14 +107,14 @@ export class VerticalSlider {
 			target: this.touchLayer,
 
 			onDrag: ([movX, movY], evt) => {
-				if (this.isAnimating) {
-					this.stop();
-				}
 				evt.preventDefault();
 				evt.stopPropagation();
 				// Translate the slider with the movement vector
-				this.sliderOffset += movY;
-				this.slider.style.transform = `translateY(${this.sliderOffset}px)`;
+				requestAnimationFrame(() => {
+					this.sliderOffset += movY;
+					this.slider.style.transform = `translateY(${this.sliderOffset}px)`;
+					this.updateSlidesPosition(movY);
+				});
 			},
 			onDragEnd: ([movX, movY], speed, evt) => {
 				evt.preventDefault();
@@ -123,6 +123,8 @@ export class VerticalSlider {
 				if (speed > 10) {
 					// If the movement is significant, animate the slider
 					this.animate(movY * speed);
+				} else {
+					this.stop();
 				}
 			}
 		});
@@ -185,22 +187,12 @@ export class VerticalSlider {
 		}
 
 		let lastTimestanp = Date.now();
-		let sliderOffset = this.sliderOffset;
 
 		this.isAnimating = true;
 
-		const onAnimationEnd = () => {
-			this.isAnimating = false;
-			this.velocity = 0;
-			console.log(
-				`Animation ended. Initial offset: ${this.sliderOffset}, final offset: ${sliderOffset}`
-			);
-			return (this.sliderOffset = sliderOffset); // Update the offset to the current position
-		};
-
 		const animationLoop = () => {
 			// We have been interrupted
-			if (!this.isAnimating) return onAnimationEnd();
+			if (!this.isAnimating) return this.stop();
 
 			const now = Date.now();
 			const deltaTime = now - lastTimestanp;
@@ -208,42 +200,17 @@ export class VerticalSlider {
 
 			// Update the vertical position of the slider
 			let velocity = this.velocity;
-			sliderOffset += Math.round((velocity / 1000) * deltaTime);
-			this.slider.style.transform = `translateY(${sliderOffset}px)`;
+			this.sliderOffset += Math.round((velocity / 1000) * deltaTime);
+			this.slider.style.transform = `translateY(${this.sliderOffset}px)`;
 
-			// Now we want to move the slides that get out of view
-			const slides = this.slides;
-
-			if (velocity > 0) {
-				// If we are moving down, we want to recycle the last slide under the viewport
-				// and put it in first position above the viewport
-				const lastSlide = slides.getLastItem();
-
-				if (lastSlide.top + sliderOffset > this.viewportHeight + 100) {
-					// Move the last slide before the first slide
-					const firstSlide = slides.getFirstItem();
-					lastSlide.top = firstSlide.top - lastSlide.height;
-					slides.popLast();
-				}
-			} else {
-				// If we are moving up, we want to recycle the slides that are above the viewport
-				// and put them in last position under the viewport
-				const firstSlide = slides.getFirstItem();
-
-				if (firstSlide.top + sliderOffset < -1.1 * firstSlide.height) {
-					// Move the first slide after the last slide
-					const lastSlide = slides.getLastItem();
-					firstSlide.top = lastSlide.top + lastSlide.height;
-					slides.popFirst();
-				}
-			}
+			this.updateSlidesPosition(velocity);
 
 			// Update the velocity (apply the damping factor)
 			velocity = velocity * this.damping;
 
 			if (Math.abs(velocity) < 0.05) {
 				// Velocity is now too low, stop the animation
-				return onAnimationEnd();
+				return this.stop();
 			}
 			// If the velocity is still high enough, continue the animation
 			this.velocity = velocity;
@@ -253,8 +220,41 @@ export class VerticalSlider {
 		requestAnimationFrame(animationLoop);
 	}
 
+	updateSlidesPosition(lastMoveY: number) {
+		// Now we want to move the slides that get out of view
+		const slides = this.slides;
+
+		if (lastMoveY > 0) {
+			// If we are moving down, we want to recycle the last slide under the viewport
+			// and put it in first position above the viewport
+			const lastSlide = slides.getLastItem();
+
+			if (lastSlide.top + this.sliderOffset > this.viewportHeight + 100) {
+				// Move the last slide before the first slide
+				const firstSlide = slides.getFirstItem();
+				lastSlide.top = firstSlide.top - lastSlide.height;
+				slides.popLast();
+			}
+		} else {
+			// If we are moving up, we want to recycle the slides that are above the viewport
+			// and put them in last position under the viewport
+			const firstSlide = slides.getFirstItem();
+
+			if (firstSlide.top + this.sliderOffset < -1.1 * firstSlide.height) {
+				// Move the first slide after the last slide
+				const lastSlide = slides.getLastItem();
+				firstSlide.top = lastSlide.top + lastSlide.height;
+				slides.popFirst();
+			}
+		}
+	}
+
 	stop() {
 		this.isAnimating = false;
 		this.velocity = 0;
+
+		this.slides.forEach((slide, index) => {
+			slide.tabIndex = index + 1;
+		});
 	}
 }
