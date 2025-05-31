@@ -103,6 +103,34 @@ export class VerticalSlider {
 			}
 		});
 
+		/**
+		 * Listen to the ENTER key to select the slide under the cursor
+		 */
+		this.touchLayer.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				// Stop the animation if it is running
+				this.stop();
+				// Find the slide with the focus
+				const selectedSlide = this.slides.find(
+					({ element }) => element === document.activeElement
+				);
+				const index = selectedSlide?.getData("index");
+				if (this.onSlideSelect && index !== undefined) {
+					const className = this.onSlideSelect(index);
+					if (className) {
+						// Remove the active class from all slides
+						this.slides.forEach((slide) => {
+							slide.element.classList.remove(className);
+							// Add the active class to the selected slides with the same index
+							if (slide.getData("index") === index) {
+								slide.element?.classList.add(className);
+							}
+						});
+					}
+				}
+			}
+		});
+
 		new TouchEventListener({
 			target: this.touchLayer,
 
