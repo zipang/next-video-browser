@@ -1,9 +1,35 @@
 "use client";
 
-import { type FC, useRef, useEffect } from "react";
-import { Box } from "@chakra-ui/react";
+import { type FC, createElement, useRef, useEffect } from "react";
 import { usePlayerState } from "@components/PlayerStateProvider";
 import { VideoOverlay } from "./VideoOverlay";
+import "youtube-video-element";
+import "vimeo-video-element";
+
+// Extend JSX.IntrinsicElements for custom video elements
+declare global {
+	namespace JSX {
+		interface IntrinsicElements {
+			"youtube-video": React.DetailedHTMLProps<
+				React.VideoHTMLAttributes<HTMLVideoElement>,
+				HTMLVideoElement
+			>;
+			"vimeo-video": React.DetailedHTMLProps<
+				React.VideoHTMLAttributes<HTMLVideoElement>,
+				HTMLVideoElement
+			>;
+			"cloudflare-video": React.DetailedHTMLProps<
+				React.VideoHTMLAttributes<HTMLVideoElement>,
+				HTMLVideoElement
+			>;
+		}
+	}
+}
+
+interface VideoPlayerConfig {
+	element: "cloudflare-video" | "youtube-video" | "vimeo-video" | "video";
+	config?: Record<string, any>;
+}
 
 // --- VideoPlayer Component ---
 export interface VideoPlayerProps {
@@ -12,9 +38,37 @@ export interface VideoPlayerProps {
 	height: string | number;
 }
 
-export const VideoPlayer: FC<VideoPlayerProps> = ({ src, width, height }) => {
+const getVideoPlayerFor = (src: string): VideoPlayerConfig => {
+	if (/youtu/.test(src)) {
+		return {
+			element: "youtube-video",
+			config: {
+				disablekb: 0,
+				rel: 0,
+				fs: 1
+			}
+		};
+	}
+
+	if (/vimeo.com/.test(src)) {
+		return {
+			element: "vimeo-video",
+			config: {}
+		};
+	}
+
+	return {
+		// Default to HTML5 video element
+		element: "video",
+		config: {}
+	};
+};
+
+export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
 	// Handle to the video tag element
 	const videoElt = useRef<HTMLVideoElement>(null);
+
+	const { element, config } = getVideoPlayerFor(src);
 
 	const { playing, stopPlay } = usePlayerState();
 
@@ -29,29 +83,19 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src, width, height }) => {
 				videoElt.current.pause();
 			}
 		}
-	}, [playing]); // Re-evaluate if isPlaying or src changes
-
-	// Effect to reset video (e.g., currentTime) when src changes
-	useEffect(() => {
-		if (videoElt.current) {
-			videoElt.current.pause();
-			videoElt.current.currentTime = 0;
-		}
-	}, [src]);
+	}, [playing]);
 
 	return (
-		<Box as="section" width={width} height={height} position="relative" bg="black">
-			<Box
-				as="video"
-				ref={videoElt}
-				src={src}
-				width="100%"
-				height="100%"
-				objectFit="contain"
-				onEnded={() => stopPlay()}
-				playsInline // Recommended for mobile browsers
-			/>
+		<>
+			{createElement(element, {
+				ref: videoElt,
+				src,
+				className: "video-player",
+				config,
+				onEnded: () => stopPlay(),
+				playsInline: true
+			})}
 			<VideoOverlay />
-		</Box>
+		</>
 	);
 };
