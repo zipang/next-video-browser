@@ -10,7 +10,8 @@ import {
 	HStack,
 	Grid,
 	GridItem,
-	useSafeLayoutEffect
+	useSafeLayoutEffect,
+	Box
 } from "@chakra-ui/react";
 import { useDisclosure } from "@hooks/use-disclosure";
 import { DownloadIcon } from "@icons/download-icon";
@@ -65,7 +66,15 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 				transition="margin-left 0.3s ease"
 			>
 				{/* Video Player Section */}
-				<VideoPlayer width="100%" height="70vh" src={selectedVideo.src} />
+				<Box
+					as="section"
+					width="100%"
+					height="70vh"
+					position="relative"
+					bg="black"
+				>
+					<VideoPlayer width="100%" height="70vh" src={selectedVideo.src} />
+				</Box>
 
 				{/* Video Information Section */}
 				<Grid
