@@ -15,7 +15,7 @@ import {
 import { useDisclosure } from "@hooks/use-disclosure";
 import { DownloadIcon } from "@icons/download-icon";
 import { Drawer } from "@components/base/Drawer";
-import { VideoPlayer } from "./VideoPlayer";
+import { VideoPlayer } from "@components/videos/VideoPlayer";
 import { VideoSlider } from "./VideoSlider";
 import type { Video } from "./PlayerStateProvider";
 

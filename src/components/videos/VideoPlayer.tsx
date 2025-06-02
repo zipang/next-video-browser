@@ -1,43 +1,9 @@
 "use client";
 
 import { type FC, useRef, useEffect } from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import { usePlayerState } from "./PlayerStateProvider";
-
-// --- Internal PlayButton component ---
-const PlayButton = () => (
-	<Box
-		width="0"
-		height="0"
-		borderLeft="50px solid white"
-		borderTop="30px solid transparent"
-		borderBottom="30px solid transparent"
-		transform="translateX(10px)"
-	/>
-);
-
-// --- Internal VideoPlayerOverlay component ---
-interface VideoPlayerOverlayProps {
-	playing: boolean;
-	onClick: () => void;
-}
-
-const VideoPlayerOverlay: FC<VideoPlayerOverlayProps> = ({ playing, onClick }) => (
-	<Flex
-		position="absolute"
-		top="0"
-		left="0"
-		width="100%"
-		height="100%"
-		justifyContent="center"
-		alignItems="center"
-		bg={playing ? "transparent" : "rgba(0,0,0,0.3)"} // Transparent when playing
-		cursor="pointer"
-		onClick={onClick} // Always clickable
-	>
-		{!playing && <PlayButton />} {/* Show button only when paused */}
-	</Flex>
-);
+import { Box } from "@chakra-ui/react";
+import { usePlayerState } from "@components/PlayerStateProvider";
+import { VideoOverlay } from "./VideoOverlay";
 
 // --- VideoPlayer Component ---
 export interface VideoPlayerProps {
@@ -50,7 +16,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src, width, height }) => {
 	// Handle to the video tag element
 	const videoElt = useRef<HTMLVideoElement>(null);
 
-	const { playing, togglePlay, stopPlay } = usePlayerState();
+	const { playing, stopPlay } = usePlayerState();
 
 	// Effect to control actual video element play/pause based on isPlaying prop or src change
 	useEffect(() => {
@@ -85,7 +51,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src, width, height }) => {
 				onEnded={() => stopPlay()}
 				playsInline // Recommended for mobile browsers
 			/>
-			<VideoPlayerOverlay playing={playing} onClick={togglePlay} />
+			<VideoOverlay />
 		</Box>
 	);
 };
