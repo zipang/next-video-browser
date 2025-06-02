@@ -1,84 +1,114 @@
 [
-	{
-		"id": 1,
-		"title": "Urban Exploration",
-		"duration": "2:45",
-		"description": "A journey through abandoned urban landscapes revealing the beauty in decay and forgotten spaces.",
-		"thumbnail": "/emilia-clarke-game-of-thrones-saison8.jpg?width=240&color=red",
-		"height": 157,
-		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-		"resources": [
-			{
-				"name": "Location Guide",
-				"url": "#"
-			},
-			{
-				"name": "Photography Tips",
-				"url": "#"
-			}
-		]
-	},
-	{
-		"id": 2,
-		"title": "Ocean Depths",
-		"duration": "3:21",
-		"description": "Dive into the mysterious world beneath the waves, where strange creatures and hidden wonders await discovery.",
-		"thumbnail": "/the-batman-motorcycle.webp?width=240",
-		"height": 185,
-		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-		"resources": [
-			{
-				"name": "Marine Biology Notes",
-				"url": "#"
-			}
-		]
-	},
-	{
-		"id": 3,
-		"title": "Mountain Peaks",
-		"duration": "4:12",
-		"description": "Scaling the highest summits to capture breathtaking vistas and the raw power of nature at its most majestic.",
-		"thumbnail": "/vignette.jpg?width=240",
-		"height": 166,
-		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-		"resources": [
-			{
-				"name": "Climbing Equipment List",
-				"url": "#"
-			},
-			{
-				"name": "Weather Conditions",
-				"url": "#"
-			}
-		]
-	},
-	{
-		"id": 4,
-		"title": "Desert Mirages",
-		"duration": "2:58",
-		"description": "The stark beauty of arid landscapes, where time stands still and the horizon stretches into infinity.",
-		"thumbnail": "/ken-block-gymkhana-anthology.jpg?width=240",
-		"height": 144,
-		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-		"resources": []
-	},
-	{
-		"id": 5,
-		"title": "Forest Whispers",
-		"duration": "3:45",
-		"description": "Ancient woodlands teeming with life, where sunlight filters through dense canopies to illuminate hidden worlds.",
-		"thumbnail": "/arrested-development-serie-poster.avif?width=240",
-		"height": 130,
-		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-		"resources": [
-			{
-				"name": "Tree Species Guide",
-				"url": "#"
-			},
-			{
-				"name": "Wildlife Spotting Tips",
-				"url": "#"
-			}
-		]
-	}
+    {
+        "id": 1,
+        "title": "Urban Exploration",
+        "duration": "2:45",
+        "description": "A journey through abandoned urban landscapes revealing the beauty in decay and forgotten spaces.",
+        "thumbnail": "/emilia-clarke-game-of-thrones-saison8.jpg?width=240&color=red",
+        "height": 157,
+        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "resources": [
+            {
+                "name": "Location Guide",
+                "url": "#"
+            },
+            {
+                "name": "Photography Tips",
+                "url": "#"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Ocean Depths",
+        "duration": "3:21",
+        "description": "Dive into the mysterious world beneath the waves, where strange creatures and hidden wonders await discovery.",
+        "thumbnail": "/the-batman-motorcycle.webp?width=240",
+        "height": 185,
+        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        "resources": [
+            {
+                "name": "Marine Biology Notes",
+                "url": "#"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Mountain Peaks",
+        "duration": "4:12",
+        "description": "Scaling the highest summits to capture breathtaking vistas and the raw power of nature at its most majestic.",
+        "thumbnail": "/vignette.jpg?width=240",
+        "height": 166,
+        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        "resources": [
+            {
+                "name": "Climbing Equipment List",
+                "url": "#"
+            },
+            {
+                "name": "Weather Conditions",
+                "url": "#"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Desert Mirages",
+        "duration": "2:58",
+        "description": "The stark beauty of arid landscapes, where time stands still and the horizon stretches into infinity.",
+        "thumbnail": "/ken-block-gymkhana-anthology.jpg?width=240",
+        "height": 144,
+        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+        "resources": []
+    },
+    {
+        "id": 5,
+        "title": "Forest Whispers",
+        "duration": "3:45",
+        "description": "Ancient woodlands teeming with life, where sunlight filters through dense canopies to illuminate hidden worlds.",
+        "thumbnail": "/arrested-development-serie-poster.avif?width=240",
+        "height": 130,
+        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+        "resources": [
+            {
+                "name": "Tree Species Guide",
+                "url": "#"
+            },
+            {
+                "name": "Wildlife Spotting Tips",
+                "url": "#"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "title": "The Green Snake",
+        "duration": "2:10",
+        "description": "A mesmerizing journey following the elusive green snake through lush, vibrant landscapes.",
+        "thumbnail": "/the-green-snake.jpg?width=240",
+        "height": 142,
+        "src": "https://vimeo.com/67529263",
+        "resources": [
+            {
+                "name": "Snake Species Info",
+                "url": "#"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "title": "Most Incredible Rock Formations",
+        "duration": "17:17",
+        "description": "Discover some of the world's most breathtaking and unusual rock formations shaped by nature over millennia.",
+        "thumbnail": "/incredible-geology.jpg?width=240",
+        "height": 142,
+        "src": "https://youtu.be/y_tgA4GXGhU",
+        "resources": [
+            {
+                "name": "Geology Facts",
+                "url": "#"
+            }
+        ]
+    }
 ]

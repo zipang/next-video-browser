@@ -82,7 +82,8 @@ export const PlayerStateProvider: FC<PlayerStateProviderProps> = ({
 	const selectVideo = (index: number) =>
 		setPlayerState({
 			...playerState,
-			selectedVideo: index
+			selectedVideo: index,
+			playing: false
 		});
 
 	const togglePlay = () =>
