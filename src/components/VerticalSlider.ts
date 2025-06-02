@@ -90,16 +90,7 @@ export class VerticalSlider {
 
 			if (this.onSlideSelect && index !== undefined) {
 				const className = this.onSlideSelect(index);
-				if (className) {
-					// Remove the active class from all slides
-					this.slides.forEach((slide) => {
-						slide.element.classList.remove(className);
-						// Add the active class to the selected slides with the same index
-						if (slide.getData("index") === index) {
-							slide.element?.classList.add(className);
-						}
-					});
-				}
+				this.activateSlide(index, className);
 			}
 		});
 
@@ -117,16 +108,7 @@ export class VerticalSlider {
 				const index = selectedSlide?.getData("index");
 				if (this.onSlideSelect && index !== undefined) {
 					const className = this.onSlideSelect(index);
-					if (className) {
-						// Remove the active class from all slides
-						this.slides.forEach((slide) => {
-							slide.element.classList.remove(className);
-							// Add the active class to the selected slides with the same index
-							if (slide.getData("index") === index) {
-								slide.element?.classList.add(className);
-							}
-						});
-					}
+					this.activateSlide(index, className);
 				}
 			}
 		});
@@ -275,6 +257,17 @@ export class VerticalSlider {
 				slides.popFirst();
 			}
 		}
+	}
+
+	activateSlide(index: number, className = "active") {
+		// Remove the active class from all slides
+		this.slides.forEach((slide) => {
+			slide.element.classList.remove(className);
+			// Add the active class to the selected slides with the same index
+			if (slide.getData("index") === index) {
+				slide.element?.classList.add(className);
+			}
+		});
 	}
 
 	stop() {
