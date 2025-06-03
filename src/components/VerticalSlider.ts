@@ -1,4 +1,5 @@
-import { TouchEventListener } from "src/utils/TouchEventsListener";
+import { TouchEventListener } from "@utils/TouchEventsListener";
+import { easeOutBack } from "@utils/easing";
 import { CircularList } from "./CircularList";
 import { ElementWrapper } from "./ElementWrapper";
 
@@ -21,6 +22,10 @@ export interface VSliderOptions {
 	 */
 	count: number;
 	/**
+	 * Index of the selected slide
+	 */
+	selected: number;
+	/**
 	 * Width of the slider
 	 */
 	width: number;
@@ -42,6 +47,7 @@ export class VerticalSlider {
 	count: number;
 
 	isAnimating = false; // start/stop the animation
+	selected = -1; // no default selected slide
 	velocity = 0; // animation speed (px/s)
 	damping: number;
 
@@ -59,11 +65,13 @@ export class VerticalSlider {
 		onSlideSelect,
 		width = 240,
 		damping = 0.9,
-		count
+		count,
+		selected
 	}: VSliderOptions) {
 		this.getSlide = getSlide;
 		this.onSlideSelect = onSlideSelect || (() => "active");
 		this.count = count;
+		this.selected = selected;
 
 		this.damping = damping;
 
@@ -72,10 +80,13 @@ export class VerticalSlider {
 		this.touchLayer.className = "vertical-slider__touch-layer";
 		this.touchLayer.style.width = `${width}px`;
 
-		this.touchLayer.addEventListener("wheel", (event) => {
-			event.preventDefault();
-			this.animate(-event.deltaY * 11);
-		});
+		this.touchLayer.addEventListener(
+			"wheel",
+			(event) => {
+				this.animate(-event.deltaY * 11);
+			},
+			{ passive: true }
+		);
 
 		this.touchLayer.addEventListener("click", (event) => {
 			// Stop the animation if it is running
@@ -89,26 +100,30 @@ export class VerticalSlider {
 			const index = selectedSlide?.getData("index");
 
 			if (this.onSlideSelect && index !== undefined) {
-				const className = this.onSlideSelect(index);
-				this.activateSlide(index, className);
+				this.onSlideSelect(index);
+				this.activateSlide(index);
 			}
 		});
 
 		/**
 		 * Listen to the ENTER key to select the slide under the cursor
 		 */
-		this.touchLayer.addEventListener("keydown", (event) => {
-			if (event.key === "Enter") {
-				// Stop the animation if it is running
-				this.stop();
+		this.touchLayer.addEventListener("keydown", (evt) => {
+			console.log(`KEY PRESSED ${evt.key}`);
+			if (evt.key === "Enter") {
 				// Find the slide with the focus
 				const selectedSlide = this.slides.find(
 					({ element }) => element === document.activeElement
 				);
+				console.log(
+					"Found slide with focus",
+					selectedSlide,
+					document.activeElement
+				);
 				const index = selectedSlide?.getData("index");
 				if (this.onSlideSelect && index !== undefined) {
-					const className = this.onSlideSelect(index);
-					this.activateSlide(index, className);
+					this.onSlideSelect(index);
+					this.activateSlide(index);
 				}
 			}
 		});
@@ -116,7 +131,7 @@ export class VerticalSlider {
 		new TouchEventListener({
 			target: this.touchLayer,
 
-			onDrag: ([movX, movY], evt) => {
+			onDrag: ([_, movY], evt) => {
 				evt.preventDefault();
 				evt.stopPropagation();
 				// Translate the slider with the movement vector
@@ -126,7 +141,7 @@ export class VerticalSlider {
 					this.updateSlidesPosition(movY);
 				});
 			},
-			onDragEnd: ([movX, movY], speed, evt) => {
+			onDragEnd: ([_, movY], speed, evt) => {
 				evt.preventDefault();
 				evt.stopPropagation();
 
@@ -163,7 +178,8 @@ export class VerticalSlider {
 		let repeat = 1;
 		while (repeat * totalHeight < this.viewportHeight + 200) repeat++;
 
-		this.slides = new CircularList(repeat * count).map((_, index) => {
+		this.slides = new CircularList(repeat * count).map((_, i) => {
+			const index = i % count;
 			// Each slide is wrapped inside an absolutely positionned div (slide-container)
 			const slideWrapper = new ElementWrapper({
 				element: "div.slide-container",
@@ -171,12 +187,12 @@ export class VerticalSlider {
 				data: { index }
 			});
 
-			const { height, render } = getSlide(index % count);
+			const { height, render } = getSlide(index);
 			slideWrapper.height = height;
 			slideWrapper.top = slidePos;
 			slidePos = slidePos + height;
 			slideWrapper.swapChild(render);
-			slideWrapper.setData("index", index % count);
+			if (index === this.selected) slideWrapper.classList.add("active");
 
 			return slideWrapper.appendTo(this.slider);
 		});
@@ -188,8 +204,9 @@ export class VerticalSlider {
 	 * Translate the slider up or down with the given initial velocity
 	 * Velocity decrease over time with the damping factor.
 	 * @param initialVelocity The initial velocity in pixels per second.
+	 * @param applyDamping Apply a natural velocity decrease. Pass FALSE to control the speed
 	 */
-	animate(initialVelocity: number) {
+	animate(initialVelocity: number, applyDamping = true) {
 		this.velocity = initialVelocity;
 
 		if (this.isAnimating) {
@@ -216,7 +233,7 @@ export class VerticalSlider {
 			this.updateSlidesPosition(velocity);
 
 			// Update the velocity (apply the damping factor)
-			velocity = velocity * this.damping;
+			if (applyDamping) velocity = velocity * this.damping;
 
 			if (Math.abs(velocity) < 0.05) {
 				// Velocity is now too low, stop the animation
@@ -231,7 +248,7 @@ export class VerticalSlider {
 	}
 
 	updateSlidesPosition(lastMoveY: number) {
-		// Now we want to move the slides that get out of view
+		// Now we want to reposition the slides that went out of view
 		const slides = this.slides;
 
 		if (lastMoveY > 0) {
@@ -259,15 +276,61 @@ export class VerticalSlider {
 		}
 	}
 
-	activateSlide(index: number, className = "active") {
+	activateSlide(index: number) {
+		console.log(`Activating slide #${index}`);
+		this.selected = index;
 		// Remove the active class from all slides
 		this.slides.forEach((slide) => {
-			slide.element.classList.remove(className);
+			slide.element.classList.remove("active");
 			// Add the active class to the selected slides with the same index
 			if (slide.getData("index") === index) {
-				slide.element?.classList.add(className);
+				slide.element?.classList.add("active");
 			}
 		});
+		return this;
+	}
+
+	/**
+	 * Scroll a slide to the center of the viewport
+	 * @param index of the slide to select
+	 * @param time scroll duration in ms
+	 */
+	scrollToSlide(index: number, time: number) {
+		const { top, height } = this.slides.getItem(index);
+		const initialOffset = this.sliderOffset;
+		const targetOffset = initialOffset - top + window.innerHeight / 2 - height / 2;
+		const velocity = (targetOffset / time) * 1000;
+		const start = Date.now();
+
+		console.log(
+			`Scolling to slide #${index} will move the slider from ${initialOffset} to ${targetOffset}px in ${time}ms. Velocity is ${velocity}px/s`
+		);
+
+		const animationLoop = () => {
+			if (!this.isAnimating) return this.stop();
+
+			const progression = (Date.now() - start) / time;
+
+			const newOffset = Math.round(
+				initialOffset + targetOffset * easeOutBack(progression)
+			);
+
+			if (newOffset !== this.sliderOffset) {
+				this.sliderOffset = newOffset;
+				this.slider.style.transform = `translateY(${newOffset}px)`;
+
+				this.updateSlidesPosition(velocity);
+			}
+
+			if (progression < 1) {
+				requestAnimationFrame(animationLoop);
+			} else {
+				this.stop();
+			}
+		};
+
+		this.isAnimating = true;
+		requestAnimationFrame(animationLoop);
 	}
 
 	stop() {
@@ -277,5 +340,6 @@ export class VerticalSlider {
 		this.slides.forEach((slide, index) => {
 			slide.tabIndex = index + 1;
 		});
+		return this;
 	}
 }
