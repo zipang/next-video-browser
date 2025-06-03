@@ -3,7 +3,7 @@ import type { IconProps } from ".";
 import clsx from "clsx";
 
 export const PlayIcon: FC<IconProps> = ({
-	size = "1em",
+	size = "1rem",
 	color = "currentColor",
 	className = ""
 }) => (
