@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, type FC, type PropsWithChildren } from "react";
+import { createContext, useContext, type FC, type PropsWithChildren } from "react";
 
 type TCallback = () => void;
 type TListener = (data: any) => void;
@@ -52,7 +52,6 @@ export const EventBusProvider: FC<PropsWithChildren> = ({ children }) => {
 		<EventBusContext.Provider value={eventBus}>{children}</EventBusContext.Provider>
 	);
 };
-import { useContext } from "react";
 
 export const useEventBus: () => EventBus = () => {
 	const context = useContext(EventBusContext);
