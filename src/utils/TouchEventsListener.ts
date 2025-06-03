@@ -115,11 +115,13 @@ export class TouchEventListener {
 		this.onDragEnd = onDragEnd;
 		this.onTap = onTap;
 
-		target.addEventListener("touchstart", this.handleTouchStart);
-		target.addEventListener("touchend", this.handleTouchEnd);
+		target.addEventListener("touchstart", this.handleTouchStart, { passive: true });
+		target.addEventListener("touchend", this.handleTouchEnd, { passive: true });
 
 		// Don't register touchmove if onDrag callback is not defined
-		if (this.onDrag) target.addEventListener("touchmove", this.handleTouchMove);
+		if (this.onDrag) {
+			target.addEventListener("touchmove", this.handleTouchMove, { passive: true });
+		}
 
 		if (detectMouseEvents) {
 			target.addEventListener("mousedown", this.handleMouseDown);
