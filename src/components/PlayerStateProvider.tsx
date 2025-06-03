@@ -1,4 +1,5 @@
 import { useState, createContext, useContext, type FC, type ReactNode } from "react";
+import type { VerticalSlider } from "./VerticalSlider";
 
 export interface VideoResource {
 	name: string;
@@ -42,12 +43,14 @@ export interface Video {
 
 export interface PlayerState {
 	playlist: Video[];
+	slider: VerticalSlider | null;
 	selectedVideo: number;
 	playing: boolean;
 }
 export interface PlayerMethods {
 	updatePlaylist: (playlist: Video[]) => void;
 	selectVideo: (index: number) => void;
+	setSlider: (slider: VerticalSlider) => void;
 	startPlay: () => void;
 	stopPlay: () => void;
 	togglePlay: () => void;
@@ -55,6 +58,7 @@ export interface PlayerMethods {
 
 const EMPTY_STATE = {
 	playlist: [],
+	slider: null,
 	selectedVideo: 0,
 	playing: false
 } as PlayerState;
@@ -77,6 +81,12 @@ export const PlayerStateProvider: FC<PlayerStateProviderProps> = ({
 		setPlayerState({
 			...playerState,
 			playlist
+		});
+
+	const setSlider = (slider: VerticalSlider) =>
+		setPlayerState({
+			...playerState,
+			slider
 		});
 
 	const selectVideo = (index: number) =>
@@ -108,6 +118,7 @@ export const PlayerStateProvider: FC<PlayerStateProviderProps> = ({
 		<PlayerContext.Provider
 			value={{
 				updatePlaylist,
+				setSlider,
 				selectVideo,
 				startPlay,
 				stopPlay,
