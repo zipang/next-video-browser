@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, type FC } from "react";
 import {
 	Flex,
 	Text,
@@ -18,27 +17,30 @@ import { DownloadIcon } from "@icons/download-icon";
 import { Drawer } from "@components/base/Drawer";
 import { VideoPlayer } from "@components/videos/VideoPlayer";
 import { VideoSlider } from "./VideoSlider";
-import type { Video } from "./PlayerStateProvider";
+import { usePlayerState } from "./PlayerStateProvider";
 
-export interface VideoGalleryProps {
-	videos: Video[];
-}
-
-export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
-	const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+export const VideoGallery = () => {
+	const { playlist, selectedVideo, slider } = usePlayerState();
 	const [isPanelOpen, toggleDrawer, openDrawer, closeDrawer] = useDisclosure({
 		defaultOpen: false
 	});
 
+	const currentVideo = playlist[selectedVideo];
+
 	useSafeLayoutEffect(() => {
-		/**
-		 * Open the drawer after a short delay to allow for smooth transitions.
-		 */
-		setTimeout(() => openDrawer(), 1000);
-	}, []);
+		if (slider) {
+			/**
+			 * Open the drawer after a short delay and scroll to the first slide.
+			 */
+			setTimeout(() => {
+				openDrawer();
+				slider.scrollToSlide(0, 2000);
+			}, 1000);
+		}
+	}, [slider]);
 
 	return (
-		<main>
+		<Flex as="main" flex="1" flexDirection="column" height="100vh">
 			{/* Video Launcher - Left Side */}
 			<Drawer
 				placement="left"
@@ -49,87 +51,74 @@ export const VideoGallery: FC<VideoGalleryProps> = ({ videos }) => {
 				showOverlay={true}
 				showHandler={true}
 			>
-				<VideoSlider
-					videos={videos}
-					selectedVideo={selectedVideo}
-					setSelectedVideo={setSelectedVideo}
-				/>
+				<VideoSlider />
 			</Drawer>
 
 			{/* Main Content Area */}
-			<Flex
-				flex="1"
-				flexDirection="column"
-				height="100vh"
-				overflowY="auto"
-				bg="brand.900"
-				transition="margin-left 0.3s ease"
+
+			{/* Video Player Section */}
+			<Box
+				as="section"
+				width="100%"
+				minHeight="70vh"
+				position="relative"
+				bg="black"
 			>
-				{/* Video Player Section */}
-				<Box
-					as="section"
-					width="100%"
-					height="70vh"
-					position="relative"
-					bg="black"
-				>
-					<VideoPlayer width="100%" height="70vh" src={selectedVideo.src} />
-				</Box>
+				<VideoPlayer src={currentVideo.src} />
+			</Box>
 
-				{/* Video Information Section */}
-				<Grid
-					as="section"
-					templateColumns="repeat(2, 1fr)"
-					ml="240px"
-					gap={8}
-					padding="8"
-					bg="brand.900"
-				>
-					{/* Left Column - Title and Description */}
-					<GridItem>
-						<VStack align="flex-start">
-							<Heading size="2xl" fontWeight="900">
-								{selectedVideo.title}
-							</Heading>
-							<Text fontSize="xl" color="gray.400">
-								Duration: {selectedVideo.duration}
-							</Text>
-							<Text fontSize="xl" lineHeight="1.8">
-								{selectedVideo.description}
-							</Text>
-						</VStack>
-					</GridItem>
+			{/* Video Information Section */}
+			<Grid
+				as="section"
+				templateColumns="repeat(2, 1fr)"
+				ml="240px"
+				gap={8}
+				padding={8}
+			>
+				{/* Left Column - Title and Description */}
+				<GridItem>
+					<VStack align="flex-start">
+						<Heading size="2xl" fontWeight="900">
+							{currentVideo.title}
+						</Heading>
+						<Text fontSize="xl" color="gray.400">
+							Duration: {currentVideo.duration}
+						</Text>
+						<Text fontSize="xl" lineHeight="1.8">
+							{currentVideo.description}
+						</Text>
+					</VStack>
+				</GridItem>
 
-					{/* Right Column - Additional Resources */}
-					<GridItem>
-						<VStack align="flex-start">
-							<Heading size="xl">Resources</Heading>
+				{/* Right Column - Additional Resources */}
+				<GridItem>
+					<VStack align="flex-start">
+						<Heading size="xl">Resources</Heading>
 
-							<ul className="ressources">
-								{selectedVideo.resources.length > 0 ? (
-									selectedVideo.resources.map((resource, index) => (
-										<HStack as="li" key={`ressource-${index}`}>
-											<DownloadIcon />
-											<Link
-												href={resource.url}
-												fontSize="xl"
-												fontWeight="400"
-												_hover={{ textDecoration: "underline" }}
-											>
-												{resource.name} (PDF)
-											</Link>
-										</HStack>
-									))
-								) : (
-									<Text fontSize="xl" color="gray.500">
-										No resources available
-									</Text>
-								)}
-							</ul>
-						</VStack>
-					</GridItem>
-				</Grid>
-			</Flex>
-		</main>
+						<ul className="ressources">
+							{currentVideo.resources.length > 0 ? (
+								currentVideo.resources.map((resource, index) => (
+									<HStack as="li" key={`ressource-${index}`}>
+										<DownloadIcon />
+										<Link
+											href={resource.url}
+											fontSize="xl"
+											fontWeight="400"
+											_hover={{ textDecoration: "underline" }}
+										>
+											{resource.name} (PDF)
+										</Link>
+									</HStack>
+								))
+							) : (
+								<Text fontSize="xl" color="gray.500">
+									No resources available
+								</Text>
+							)}
+						</ul>
+					</VStack>
+				</GridItem>
+			</Grid>
+		</Flex>
 	);
 };
