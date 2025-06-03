@@ -51,8 +51,8 @@ export interface PlayerMethods {
 	updatePlaylist: (playlist: Video[]) => void;
 	selectVideo: (index: number) => void;
 	setSlider: (slider: VerticalSlider) => void;
-	startPlay: () => void;
-	stopPlay: () => void;
+	startPlaying: () => void;
+	stopPlaying: () => void;
 	togglePlay: () => void;
 }
 
@@ -102,13 +102,13 @@ export const PlayerStateProvider: FC<PlayerStateProviderProps> = ({
 			playing: !playerState.playing
 		});
 
-	const startPlay = () =>
+	const startPlaying = () =>
 		setPlayerState({
 			...playerState,
 			playing: true
 		});
 
-	const stopPlay = () =>
+	const stopPlaying = () =>
 		setPlayerState({
 			...playerState,
 			playing: false
@@ -120,8 +120,8 @@ export const PlayerStateProvider: FC<PlayerStateProviderProps> = ({
 				updatePlaylist,
 				setSlider,
 				selectVideo,
-				startPlay,
-				stopPlay,
+				startPlaying,
+				stopPlaying,
 				togglePlay,
 				...playerState
 			}}
