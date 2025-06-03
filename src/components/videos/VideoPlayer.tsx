@@ -1,76 +1,37 @@
 "use client";
 
-import { type FC, createElement, useRef, useEffect } from "react";
+import { type FC, useRef, useEffect, Suspense, lazy } from "react";
 import { usePlayerState } from "@components/PlayerStateProvider";
 import { VideoOverlay } from "./VideoOverlay";
-import "youtube-video-element";
-import "vimeo-video-element";
 
-// Extend JSX.IntrinsicElements for custom video elements
-declare global {
-	namespace JSX {
-		interface IntrinsicElements {
-			"youtube-video": React.DetailedHTMLProps<
-				React.VideoHTMLAttributes<HTMLVideoElement>,
-				HTMLVideoElement
-			>;
-			"vimeo-video": React.DetailedHTMLProps<
-				React.VideoHTMLAttributes<HTMLVideoElement>,
-				HTMLVideoElement
-			>;
-			"cloudflare-video": React.DetailedHTMLProps<
-				React.VideoHTMLAttributes<HTMLVideoElement>,
-				HTMLVideoElement
-			>;
-		}
-	}
-}
+const VimeoPlayer = lazy(() => import("./VimeoPlayer"));
+const YoutubePlayer = lazy(() => import("./YoutubePlayer"));
 
-interface VideoPlayerConfig {
-	element: "cloudflare-video" | "youtube-video" | "vimeo-video" | "video";
+// --- VideoPlayer Component ---
+export interface VideoPlayerProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
+	src: string;
 	config?: Record<string, any>;
 }
 
-// --- VideoPlayer Component ---
-export interface VideoPlayerProps {
-	src: string;
-	width: string | number;
-	height: string | number;
-}
-
-const getVideoPlayerFor = (src: string): VideoPlayerConfig => {
-	if (/youtu/.test(src)) {
-		return {
-			element: "youtube-video",
-			config: {
-				disablekb: 0,
-				rel: 0,
-				fs: 1
-			}
-		};
-	}
-
-	if (/vimeo.com/.test(src)) {
-		return {
-			element: "vimeo-video",
-			config: {}
-		};
-	}
-
-	return {
-		// Default to HTML5 video element
-		element: "video",
-		config: {}
-	};
+const getPlayerType = (src: string) => {
+	if (/youtu/.test(src)) return "youtube";
+	if (/vimeo.com/.test(src)) return "vimeo";
+	return "video";
 };
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
 	// Handle to the video tag element
 	const videoElt = useRef<HTMLVideoElement>(null);
+	const { playing, stopPlaying } = usePlayerState();
 
-	const { element, config } = getVideoPlayerFor(src);
-
-	const { playing, stopPlay } = usePlayerState();
+	const playerProps = {
+		ref: videoElt,
+		src,
+		className: "video-player",
+		controls: false,
+		onEnded: () => stopPlaying(),
+		playsInline: true
+	};
 
 	// Effect to control actual video element play/pause based on isPlaying prop or src change
 	useEffect(() => {
@@ -86,16 +47,18 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
 	}, [playing]);
 
 	return (
-		<>
-			{createElement(element, {
-				ref: videoElt,
-				src,
-				className: "video-player",
-				config,
-				onEnded: () => stopPlay(),
-				playsInline: true
-			})}
+		<Suspense>
 			<VideoOverlay />
-		</>
+			{(() => {
+				switch (getPlayerType(src)) {
+					case "youtube":
+						return <YoutubePlayer {...playerProps} />;
+					case "vimeo":
+						return <VimeoPlayer {...playerProps} />;
+					default:
+						return <video {...playerProps} />;
+				}
+			})()}
+		</Suspense>
 	);
 };
