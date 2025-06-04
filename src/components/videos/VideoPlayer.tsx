@@ -3,6 +3,7 @@
 import { type FC, useRef, useEffect, Suspense, lazy } from "react";
 import { usePlayerState } from "@components/PlayerStateProvider";
 import { VideoOverlay } from "./VideoOverlay";
+import useKeypress from "@hooks/use-keypress";
 
 const VimeoPlayer = lazy(() => import("./VimeoPlayer"));
 const YoutubePlayer = lazy(() => import("./YoutubePlayer"));
@@ -20,9 +21,11 @@ const getPlayerType = (src: string) => {
 };
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
-	// Handle to the video tag element
+	// Handle to the actual <video> tag element
 	const videoElt = useRef<HTMLVideoElement>(null);
-	const { playing, stopPlaying } = usePlayerState();
+	const { playing, stopPlaying, togglePlay } = usePlayerState();
+
+	useKeypress("Space", togglePlay);
 
 	const playerProps = {
 		ref: videoElt,
