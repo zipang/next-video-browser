@@ -12,11 +12,6 @@
 	padding: 10px;
 	background-color: black;
 
-	&:focus {
-		background-color: rgba(255, 255, 255, 0.5);
-		outline: none;
-	}
-
 	> p {
 		position: absolute;
 		color: white;
@@ -35,13 +30,25 @@
 	}
 }
 
-.slide-container.active {
-	.vignette {
-		background-color: white;
+.slide-container {
+	&.active {
+		outline: none;
+
+		.vignette {
+			background-color: white;
+		}
+
+		img {
+			filter: grayscale(0%);
+			opacity: 0.9;
+		}
 	}
 
-	img {
-		filter: grayscale(0%);
-		opacity: 0.9;
+	&:focus:not(.active) {
+		outline: none;
+
+		.vignette {
+			background-color: rgba(255, 255, 255, 0.5);
+		}
 	}
 }
