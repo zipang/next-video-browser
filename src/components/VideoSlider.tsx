@@ -15,7 +15,7 @@ interface VignetteProps {
 }
 
 const Vignette: FC<VignetteProps> = ({ video, skeleton = false }) => (
-	<div key={`${video.id}`} className={`vignette video-${video.id}`} tabIndex={0}>
+	<div key={`${video.id}`} className={`vignette video-${video.id}`}>
 		{!skeleton && (
 			<Image
 				alt={video.title}
