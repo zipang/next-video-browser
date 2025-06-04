@@ -13,17 +13,8 @@ const PlayButton = () => (
 export const VideoOverlay = () => {
 	const { playing, togglePlay } = usePlayerState();
 	return (
-		<div
-			className={clsx("video-player-overlay", { playing })}
-			onClick={togglePlay}
-			onKeyDown={(evt) => {
-				// detect the space key to toggle play/pause
-				if (evt.code === "Space") {
-					evt.preventDefault(); // Prevent default action for space key
-					togglePlay();
-				}
-			}}
-		>
+		// biome-ignore lint/a11y/useKeyWithClickEvents: We register the key event handler globally
+		<div className={clsx("video-player-overlay", { playing })} onClick={togglePlay}>
 			{!playing && <PlayButton />} {/* Show button only when paused */}
 		</div>
 	);
