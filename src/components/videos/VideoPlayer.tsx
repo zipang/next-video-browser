@@ -1,17 +1,33 @@
 "use client";
 
-import { type FC, useRef, useEffect, Suspense, lazy } from "react";
+import { type FC, useRef, useEffect, Suspense } from "react";
+import {
+	MediaPlayer,
+	type MediaPlayerInstance,
+	MediaProvider,
+	Poster,
+	Track
+} from "@vidstack/react";
+import {
+	defaultLayoutIcons,
+	DefaultVideoLayout
+} from "@vidstack/react/player/layouts/default";
+
 import { usePlayerState } from "@components/PlayerStateProvider";
 import { VideoOverlay } from "./VideoOverlay";
-import useKeypress from "@hooks/use-keypress";
 
-const VimeoPlayer = lazy(() => import("./VimeoPlayer"));
-const YoutubePlayer = lazy(() => import("./YoutubePlayer"));
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "./video-player-styles.css";
+
+import languages from "./languages.json";
+import clsx from "clsx";
 
 // --- VideoPlayer Component ---
-export interface VideoPlayerProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
+export interface VideoPlayerProps {
 	src: string;
-	config?: Record<string, any>;
+	poster?: string;
+	subtitles?: string[];
 }
 
 const getPlayerType = (src: string) => {
@@ -20,48 +36,74 @@ const getPlayerType = (src: string) => {
 	return "video";
 };
 
-export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
-	// Handle to the actual <video> tag element
-	const videoElt = useRef<HTMLVideoElement>(null);
-	const { playing, stopPlaying, togglePlay } = usePlayerState();
+interface TrackProps {
+	src: string;
+	type: "srt" | "vtt";
+	lang: keyof typeof languages;
+	label: string;
+}
 
-	useKeypress("Space", togglePlay);
+const extractSubtitlesProps = (sub: string) => {
+	const [, lang, type] = sub.split(".");
+	if (type !== "srt" && type !== "vtt") {
+		throw new TypeError(`Unknown subtitle format : .${type}`);
+	}
+	const label = languages[lang as keyof typeof languages] || "transcription";
+	return { src: sub, label, lang, type } as TrackProps;
+};
+
+export const VideoPlayer: FC<VideoPlayerProps> = ({ src, poster, subtitles = [] }) => {
+	// Handle to the actual <video> tag element
+	const player = useRef<MediaPlayerInstance>(null);
+	const { playing, stopPlaying } = usePlayerState();
 
 	const playerProps = {
-		ref: videoElt,
+		ref: player,
 		src,
-		className: "video-player",
+		className: clsx("video-player", playing && "playing"),
 		controls: false,
+		playsInline: true,
 		onEnded: () => stopPlaying(),
-		playsInline: true
-	};
+		onDestroy: () => {
+			if (getPlayerType(src) !== "video") {
+				setTimeout(() => {
+					// This call will destroy the player and all child instances.
+					player.current?.destroy();
+				}, 100);
+			}
+		}
+	} as const;
 
 	// Effect to control actual video element play/pause based on isPlaying prop or src change
 	useEffect(() => {
-		if (videoElt.current) {
+		if (player.current) {
 			if (playing) {
-				videoElt.current
+				player.current
 					.play()
 					.catch((error) => console.error("Video play failed:", error));
 			} else {
-				videoElt.current.pause();
+				player.current.pause();
 			}
 		}
 	}, [playing]);
 
 	return (
 		<Suspense>
-			<VideoOverlay />
-			{(() => {
-				switch (getPlayerType(src)) {
-					case "youtube":
-						return <YoutubePlayer {...playerProps} />;
-					case "vimeo":
-						return <VimeoPlayer {...playerProps} />;
-					default:
-						return <video {...playerProps} />;
-				}
-			})()}
+			{!playing && <VideoOverlay />}
+			<MediaPlayer {...playerProps}>
+				{poster && <Poster className="poster" src={poster} />}
+				<MediaProvider>
+					{subtitles.map((sub, i) => (
+						<Track
+							key={sub}
+							default={i === 0}
+							kind="subtitles"
+							{...extractSubtitlesProps(sub)}
+						/>
+					))}
+				</MediaProvider>
+				<DefaultVideoLayout icons={defaultLayoutIcons} />
+			</MediaPlayer>
 		</Suspense>
 	);
 };
