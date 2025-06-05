@@ -36,6 +36,14 @@ export interface Video {
 	 */
 	src: string;
 	/**
+	 * Bigger launch image
+	 */
+	poster: string;
+	/**
+	 * List of availables subtitles tracks
+	 */
+	subtitles: string[] | undefined;
+	/**
 	 * List of additional ressources (PDFs)
 	 */
 	resources: VideoResource[];
