@@ -1,159 +1,156 @@
 [
-    {
-        "id": 1,
-        "title": "Urban Exploration",
-        "duration": "2:45",
-        "description": "A journey through abandoned urban landscapes revealing the beauty in decay and forgotten spaces.",
-        "thumbnail": "/emilia-clarke-game-of-thrones-saison8.jpg?width=240&color=red",
-        "poster": "/emilia-clarke-game-of-thrones-saison8.jpg",
-        "height": 157,
-        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-        "subtitles": [],
-        "resources": [
-            {
-                "name": "Location Guide",
-                "url": "#"
-            },
-            {
-                "name": "Photography Tips",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "title": "Ocean Depths",
-        "duration": "3:21",
-        "description": "Dive into the mysterious world beneath the waves, where strange creatures and hidden wonders await discovery.",
-        "thumbnail": "/the-batman-motorcycle.webp?width=240",
-        "poster": "/the-batman-motorcycle.webp",
-        "height": 185,
-        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-        "subtitles": [],
-        "resources": [
-            {
-                "name": "Marine Biology Notes",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "title": "Cautionary Tales",
-        "duration": "4:12",
-        "description": "The main character, Sintel, is attacked while traveling through a wintry mountainside. After defeating her attacker and taking his spear, she finds refuge in a shaman's hut. He asks her why she is traveling, and she confesses that she is looking for a dragon, leading into a flashback. Sintel was a homeless loner, looking for food when she discovered an injured baby dragon. She nursed him back to health and named him Scales, and the two quickly formed an emotional bond. One day, while Scales was flying, he was captured by an adult dragon. Determined to get him back, she began the long and dangerous journey that led her to the shaman's hut.",
-        "thumbnail": "/vignette.jpg?width=240",
-        "poster": "/vignette.jpg",
-        "height": 180,
-        "src": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-        "subtitles": [
-            "sintel.en.srt",
-            "sintel.fr.srt",
-            "sintel.es.srt",
-            "sintel.zh.srt",
-            "sintel.ja.srt"
-        ],
-        "resources": [
-            {
-                "name": "Dragon Tales",
-                "url": "#"
-            },
-            {
-                "name": "Fairy Tales",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 4,
-        "title": "Desert Mirages",
-        "duration": "2:58",
-        "description": "The stark beauty of arid landscapes, where time stands still and the horizon stretches into infinity.",
-        "thumbnail": "/ken-block-gymkhana-anthology.jpg?width=240",
-        "poster": "/ken-block-gymkhana-anthology.jpg",
-        "height": 144,
-        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-        "subtitles": [],
-        "resources": []
-    },
-    {
-        "id": 5,
-        "title": "Tears of Steel",
-        "duration": "12:14",
-        "description": "Tears of Steel was realized with crowd-funding by users of the open source 3D creation tool Blender. Target was to improve and test a complete open and free pipeline for visual effects in film - and to make a compelling sci-fi film in Amsterdam, the Netherlands.  The film itself, and all raw material used for making it, have been released under the Creative Commons 3.0 Attribution license. Visit the tearsofsteel.org website to find out more about this, or to purchase the 4-DVD box with a lot of extras.  (CC) Blender Foundation - http://www.tearsofsteel.org",
-        "thumbnail": "/tears-of-steel_vignette.avif?width=240",
-        "poster": "/tears-of-steel_vignette.avif",
-        "height": 120,
-        "src": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-        "subtitles": [
-            "/tears-of-steel.en.srt",
-            "/tears-of-steel.de.srt",
-            "/tears-of-steel.fr.srt",
-            "/tears-of-steel.es.srt"
-        ],
-        "resources": [
-            {
-                "name": "Robots Repair Guide",
-                "url": "#"
-            },
-            {
-                "name": "Astro Bot Blueprint",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 6,
-        "title": "The Green Snake",
-        "duration": "2:10",
-        "description": "A mesmerizing journey following the elusive green snake through lush, vibrant landscapes.",
-        "thumbnail": "/the-green-snake.jpg?width=240",
-        "poster": "/the-green-snake.jpg",
-        "height": 142,
-        "src": "https://vimeo.com/67529263",
-        "subtitles": [],
-        "resources": [
-            {
-                "name": "Snake Species Info",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 7,
-        "title": "Most Incredible Rock Formations",
-        "duration": "17:17",
-        "description": "Discover some of the world's most breathtaking and unusual rock formations shaped by nature over millennia.",
-        "thumbnail": "/incredible-geology.jpg?width=240",
-        "poster": "/incredible-geology.jpg",
-        "height": 142,
-        "src": "https://youtu.be/y_tgA4GXGhU",
-        "subtitles": [],
-        "resources": [
-            {
-                "name": "Geology Facts",
-                "url": "#"
-            }
-        ]
-    },
-    {
-        "id": 8,
-        "title": "Le changement climatique",
-        "duration": "6:57",
-        "description": "Micro-trottoir pour recueillir le ressentis des parisiennes sur le sujet du changement climatique.",
-        "thumbnail": "/tipafrance342ep-vignette.jpg?width=240",
-        "poster": "/tipafrance342ep-vignette.jpg",
-        "height": 142,
-        "src": "tipafrance342ep.mp4",
-        "subtitles": [
-            "/tipafrance342ep.fr.srt",
-            "/tipafrance342ep.en.srt"
-        ],
-        "resources": [
-            {
-                "name": "Transcription.pdf",
-                "url": "#"
-            }
-        ]
-    }
+	{
+		"id": 1,
+		"title": "Urban Exploration",
+		"duration": "2:45",
+		"description": "A journey through abandoned urban landscapes revealing the beauty in decay and forgotten spaces.",
+		"thumbnail": "/emilia-clarke-game-of-thrones-saison8.jpg?width=240&color=red",
+		"poster": "/emilia-clarke-game-of-thrones-saison8.jpg",
+		"height": 157,
+		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+		"subtitles": [],
+		"resources": [
+			{
+				"name": "Location Guide",
+				"url": "#"
+			},
+			{
+				"name": "Photography Tips",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 2,
+		"title": "Ocean Depths",
+		"duration": "3:21",
+		"description": "Dive into the mysterious world beneath the waves, where strange creatures and hidden wonders await discovery.",
+		"thumbnail": "/the-batman-motorcycle.webp?width=240",
+		"poster": "/the-batman-motorcycle.webp",
+		"height": 185,
+		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+		"subtitles": [],
+		"resources": [
+			{
+				"name": "Marine Biology Notes",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 3,
+		"title": "Cautionary Tales",
+		"duration": "4:12",
+		"description": "The main character, Sintel, is attacked while traveling through a wintry mountainside. After defeating her attacker and taking his spear, she finds refuge in a shaman's hut. He asks her why she is traveling, and she confesses that she is looking for a dragon, leading into a flashback. Sintel was a homeless loner, looking for food when she discovered an injured baby dragon. She nursed him back to health and named him Scales, and the two quickly formed an emotional bond. One day, while Scales was flying, he was captured by an adult dragon. Determined to get him back, she began the long and dangerous journey that led her to the shaman's hut.",
+		"thumbnail": "/vignette.jpg?width=240",
+		"poster": "/vignette.jpg",
+		"height": 180,
+		"src": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+		"subtitles": [
+			"sintel.en.srt",
+			"sintel.fr.srt",
+			"sintel.es.srt",
+			"sintel.zh.srt",
+			"sintel.ja.srt"
+		],
+		"resources": [
+			{
+				"name": "Dragon Tales",
+				"url": "#"
+			},
+			{
+				"name": "Fairy Tales",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 4,
+		"title": "Desert Mirages",
+		"duration": "2:58",
+		"description": "The stark beauty of arid landscapes, where time stands still and the horizon stretches into infinity.",
+		"thumbnail": "/ken-block-gymkhana-anthology.jpg?width=240",
+		"poster": "/ken-block-gymkhana-anthology.jpg",
+		"height": 144,
+		"src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+		"subtitles": [],
+		"resources": []
+	},
+	{
+		"id": 5,
+		"title": "Tears of Steel",
+		"duration": "12:14",
+		"description": "Tears of Steel was realized with crowd-funding by users of the open source 3D creation tool Blender. Target was to improve and test a complete open and free pipeline for visual effects in film - and to make a compelling sci-fi film in Amsterdam, the Netherlands.  The film itself, and all raw material used for making it, have been released under the Creative Commons 3.0 Attribution license. Visit the tearsofsteel.org website to find out more about this, or to purchase the 4-DVD box with a lot of extras.  (CC) Blender Foundation - http://www.tearsofsteel.org",
+		"thumbnail": "/tears-of-steel_vignette.avif?width=240",
+		"poster": "/tears-of-steel_vignette.avif",
+		"height": 120,
+		"src": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+		"subtitles": [
+			"/tears-of-steel.en.srt",
+			"/tears-of-steel.de.srt",
+			"/tears-of-steel.fr.srt",
+			"/tears-of-steel.es.srt"
+		],
+		"resources": [
+			{
+				"name": "Robots Repair Guide",
+				"url": "#"
+			},
+			{
+				"name": "Astro Bot Blueprint",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 6,
+		"title": "The Green Snake",
+		"duration": "2:10",
+		"description": "A mesmerizing journey following the elusive green snake through lush, vibrant landscapes.",
+		"thumbnail": "/the-green-snake.jpg?width=240",
+		"poster": "/the-green-snake.jpg",
+		"height": 142,
+		"src": "https://vimeo.com/67529263",
+		"subtitles": [],
+		"resources": [
+			{
+				"name": "Snake Species Info",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 7,
+		"title": "Most Incredible Rock Formations",
+		"duration": "17:17",
+		"description": "Discover some of the world's most breathtaking and unusual rock formations shaped by nature over millennia.",
+		"thumbnail": "/incredible-geology.jpg?width=240",
+		"poster": "/incredible-geology.jpg",
+		"height": 142,
+		"src": "https://youtu.be/y_tgA4GXGhU",
+		"subtitles": [],
+		"resources": [
+			{
+				"name": "Geology Facts",
+				"url": "#"
+			}
+		]
+	},
+	{
+		"id": 8,
+		"title": "Le changement climatique",
+		"duration": "6:57",
+		"description": "Micro-trottoir pour recueillir le ressentis des parisiennes sur le sujet du changement climatique.",
+		"thumbnail": "/tipafrance342ep-vignette.jpg?width=240",
+		"poster": "/tipafrance342ep-vignette.jpg",
+		"height": 142,
+		"src": "tipafrance342ep.mp4",
+		"subtitles": ["/tipafrance342ep.fr.srt", "/tipafrance342ep.en.srt"],
+		"resources": [
+			{
+				"name": "Transcription.pdf",
+				"url": "#"
+			}
+		]
+	}
 ]

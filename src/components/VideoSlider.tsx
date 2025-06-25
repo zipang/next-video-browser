@@ -1,11 +1,9 @@
-"use client";
-
 import { Box, useSafeLayoutEffect } from "@chakra-ui/react";
 import { useRef, type FC } from "react";
 import { createRoot } from "react-dom/client";
-import Image from "next/image";
 import { usePlayerState, type Video } from "./PlayerStateProvider";
 import { VerticalSlider } from "./VerticalSlider";
+import { Image } from "./base/Image";
 
 import "./video-slider-styles.css";
 
