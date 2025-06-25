@@ -21,7 +21,7 @@ This file provides guidance to AI agents like [Claude Code](claude.ai/code) when
 
 ## Architecture Overview
 
-This is a Next.js video browser application that showcases a collection of videos with subtitles and additional resources. The app supports multiple video platforms (YouTube, Vimeo, direct video files) and provides a unified video player experience.
+This is a React SPA video browser application that showcases a collection of videos with subtitles and additional resources. The app supports multiple video platforms (YouTube, Vimeo, direct video files) and provides a unified video player experience.
 
 ### Key Components
 
@@ -74,10 +74,10 @@ Videos are defined in `src/app/videos.json` with schema validation via Valibot:
 
 ### Technology Stack
 
-- **Framework**: Next.js 15 with App Router
+- **Framework**: React 18+ with [React Router](https://reactrouter.com) for SPA routing
 - **Runtime**: Bun for package management and development
-- **UI Library**: Chakra UI v3
-- **Video Player**: Vidstack Player (with React integration)
+- **UI Library**: [Chakra UI](https://chakra-ui.com) v3
+- **Video Player**: [Vidstack Player](https://vidstack.io/docs/player/) (with React integration)
 - **Validation**: Valibot for schema validation
 - **Styling**: CSS-in-JS (style attributes) with Chakra UI + custom CSS for non React elements
 - **Linting**: Biome (replaces ESLint + Prettier)
